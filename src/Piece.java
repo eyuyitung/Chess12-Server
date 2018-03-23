@@ -1,4 +1,4 @@
-public class Piece {
+public class Piece extends Board{
     int xPos;
     int yPos;
     boolean isWhite;
@@ -12,6 +12,11 @@ public class Piece {
     boolean checkIfDead() {
         check if piece is actually taken before removing
     }
+    boolean checkCheck() {
+        check if checking the king
+    }
+    boolean canMove (){
+        if (!checkCheck)
 
-
-}
+            return able;
+    }

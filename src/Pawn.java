@@ -2,9 +2,15 @@ public class Pawn extends Piece{
     boolean firstMove = true;
 
     boolean canMove (){
-        return board.spaceAhead(this.xPos, this.yPos) == null;
+
+        boolean able;
+        if (board[xPos][yPos-1] == null)
+            able = true;
         if (firstMove)
-            return board.spaceAhead(this.xPos,this.yPos + 1) == null;
+            if (board[xPos][yPos-2] == null)
+                able = true;
+
+
     }
 
 }

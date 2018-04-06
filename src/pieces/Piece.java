@@ -7,6 +7,8 @@ package pieces;
 
 import chess.Board;
 import chess.Player;
+import java.awt.*;
+import java.io.*;
 
 /**
  *
@@ -17,7 +19,8 @@ public class Piece {
     protected boolean avalible; //change to taken out of the array later
     protected int x;
     protected int y;
-
+    protected String dir = System.getProperty("user.dir");
+    protected Image pieces = new File(dir + File.separator +"Pieces.png");
     public Piece(Player p, int x, int y) {
         avalible = true;
         this.x = x;

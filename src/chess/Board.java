@@ -9,8 +9,10 @@ import pieces.Piece;
 import pieces.Queen;
 import pieces.Rook;
 
+import java.awt.*;
+import javax.swing.*;
+
 /**
- *
  * @author Lucas
  */
 public class Board {
@@ -20,10 +22,16 @@ public class Board {
     Player white;
     Player black;
 
+    int width = 900;
+    int height = 750;
+    JFrame frame = new JFrame("chess");
+
     public Board(Player white, Player black) {
         this.white = white;
         this.black = black;
-
+        frame.setSize(width, height);
+        frame.add(new Drawing());
+        frame.setVisible(true);
         initializePieces();
 
     }
@@ -66,4 +74,41 @@ public class Board {
         }
     }
 
+    class Drawing extends JComponent {
+        public void paint(Graphics g) {
+            int width = frame.getWidth();
+            int height = frame.getHeight();
+            int xBorder = width / 8;
+            int yBorder = height / 8;
+
+
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (i % 2 == 0) { // white top left
+                        if (j % 2 == 0){
+                            g.setColor(Color.white);
+                            g.drawRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, 20, 20);
+                        }
+                        else{
+                            g.setColor(Color.decode("#98dfe2"));
+                            g.fillRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, 20, 20);
+                        }
+                    } else if (j % 2 == 0) {
+                        g.setColor(Color.decode("#98dfe2"));
+                        g.fillRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, 20, 20);
+                    } else {
+                        g.setColor(Color.white);
+                        g.drawRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, 20, 20);
+                    }
+                }
+            }
+            g.setColor(Color.black);
+            g.drawRect(xBorder,yBorder,width-2*xBorder,height-2*yBorder);
+            //for (int i = xBorder; i <= width - xBorder*2; i += ((width - 2 * xBorder) / 8)) {
+            // for (int j = yBorder; j <= height - yBorder*2; j += ((height - 2 * yBorder) / 8)) {
+
+
+        }
+    }
 }
+

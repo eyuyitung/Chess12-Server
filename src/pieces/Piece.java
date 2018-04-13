@@ -1,26 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package pieces;
 
 import chess.Board;
 import chess.Player;
 import java.awt.*;
 import java.io.*;
+import javax.swing.*;
 
-/**
- *
- * @author Lucas
- */
+
 public class Piece {
 
     protected boolean avalible; //change to taken out of the array later
     protected int x;
     protected int y;
-    protected String dir = System.getProperty("user.dir");
-    protected Image pieces = new File(dir + File.separator +"Pieces.png");
+    protected ImageIcon pieces = new ImageIcon(System.getProperty("user.dir") + File.separator +"Pieces.png");
     public Piece(Player p, int x, int y) {
         avalible = true;
         this.x = x;
@@ -34,5 +27,9 @@ public class Piece {
             return false;
         }
         return true;
+    }
+
+    public void paint (Graphics g) {
+
     }
 }

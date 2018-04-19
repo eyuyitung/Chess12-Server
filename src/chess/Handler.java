@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package chess;
 
-/**
- *
- * @author Lucas
- */
+import java.util.Scanner;
+
+
 public class Handler {
 
     Player white;
@@ -16,20 +11,33 @@ public class Handler {
 
     Board board;
 
+    Scanner s = new Scanner(System.in);
+
     public Handler() {
-        white = new Player();
-        black = new Player();
+        white = new Player(true);
+        black = new Player(false);
 
         board = new Board(white, black);
+    }
+
+    public void run() { //change to tick / render
+        board.display();
+        while(true) {
+            System.out.println("from");
+            int x = Integer.parseInt(s.nextLine());
+            int y = Integer.parseInt(s.nextLine());
+            System.out.println("to");
+            int _x = Integer.parseInt(s.nextLine());
+            int _y = Integer.parseInt(s.nextLine());
+
+            board.getPiece(x, y).move(board, _x, _y);
+            board.display();
+        }
 
     }
-    
-    public void run() {
-        
-    }
-    
-    public void close() {
-        
+
+    public void close() { //close ports for networking
+
     }
 
 }

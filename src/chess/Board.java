@@ -12,9 +12,7 @@ import pieces.Rook;
 import java.awt.*;
 import javax.swing.*;
 
-/**
- * @author Lucas
- */
+
 public class Board {
 
     Piece[][] board = new Piece[8][8];
@@ -29,6 +27,7 @@ public class Board {
     public Board(Player white, Player black) {
         this.white = white;
         this.black = black;
+
         frame.setSize(width, height);
         frame.add(new Drawing());
         frame.setVisible(true);
@@ -61,17 +60,25 @@ public class Board {
         board[4][7] = (new King(black, 4, 7));
     }
 
-    public void printBoard() {
+    public void display() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (board[j][i] != null) {
                     System.out.print(board[j][i]);
                 } else {
-                    System.out.print(" ");
+                    System.out.print("  ");
                 }
             }
             System.out.println();
         }
+    }
+
+    public Piece[][] getBoard() {
+        return board;
+    }
+
+    public Piece getPiece(int x, int y) {
+        return board[x][y];
     }
 
     class Drawing extends JComponent {
@@ -80,25 +87,25 @@ public class Board {
             int height = frame.getHeight();
             int xBorder = width / 8;
             int yBorder = height / 8;
-
+            int arcSize = 10;
 
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     if (i % 2 == 0) { // white top left
                         if (j % 2 == 0){
                             g.setColor(Color.white);
-                            g.drawRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, 20, 20);
+                            g.drawRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
                         }
                         else{
                             g.setColor(Color.decode("#98dfe2"));
-                            g.fillRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, 20, 20);
+                            g.fillRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
                         }
                     } else if (j % 2 == 0) {
                         g.setColor(Color.decode("#98dfe2"));
-                        g.fillRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, 20, 20);
+                        g.fillRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
                     } else {
                         g.setColor(Color.white);
-                        g.drawRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, 20, 20);
+                        g.drawRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
                     }
                 }
             }

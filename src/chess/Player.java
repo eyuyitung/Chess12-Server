@@ -13,7 +13,17 @@ import pieces.Piece;
  * @author Lucas
  */
 public class Player {
-    
-    ArrayList<Piece> capturedPieces;
+
+    private ArrayList<Piece> capturedPieces;
+    private boolean white;
+
+
+    public Player(boolean b) {
+        white = b;
+    }
+
+    public boolean isWhite() {
+        return white;
+    }
 
 }

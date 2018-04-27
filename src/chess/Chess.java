@@ -1,10 +1,5 @@
 
 package chess;
-
-/**
- *
- * @author Lucas
- */
 public class Chess {
 
     private static Handler h;

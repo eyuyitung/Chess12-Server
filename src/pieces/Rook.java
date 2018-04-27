@@ -20,10 +20,26 @@ public class Rook extends Piece {
 
     @Override
     public boolean move(Board b, int _x, int _y) {
-        if (x + 0 == _x && y == _y) {
-            x = _x;
-            y = _y;
-            return true;
+        System.out.println("ultra Troll");
+
+        if (isValid(x, y, _x, _y)) {
+            // if(!(x != _x && y != _y)){
+            System.out.println("ultra Troll");
+            if(x != _x && y == _y){//horizontal
+                b.getBoard()[_x][_y] = b.getBoard()[x][y];
+                b.getBoard()[x][y] = null;
+                x = _x;
+                System.out.println("big Troll");
+                return true;
+            }
+            if(y != _y && x == _x){//vertical
+                b.getBoard()[_x][_y] = b.getBoard()[x][y];
+                b.getBoard()[x][y] = null;
+                y = _y;
+                System.out.println("small Troll");
+                return true;
+                //   }
+            }
         }
         return false;
     }

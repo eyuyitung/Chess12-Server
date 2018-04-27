@@ -29,6 +29,7 @@ public class Board {
         this.black = black;
 
         frame.setSize(width, height);
+        frame.setLayout(new GridLayout());
         frame.add(new Drawing());
         frame.setVisible(true);
         initializePieces();
@@ -92,28 +93,26 @@ public class Board {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     if (i % 2 == 0) { // white top left
-                        if (j % 2 == 0){
+                        if (j % 2 == 0) {
                             g.setColor(Color.white);
-                            g.drawRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
-                        }
-                        else{
+                            g.drawRoundRect(xBorder + i * (width - 2 * xBorder) / 8, yBorder + j * (height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
+                        } else {
                             g.setColor(Color.decode("#98dfe2"));
-                            g.fillRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
+                            g.fillRoundRect(xBorder + i * (width - 2 * xBorder) / 8, yBorder + j * (height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
                         }
                     } else if (j % 2 == 0) {
                         g.setColor(Color.decode("#98dfe2"));
-                        g.fillRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
+                        g.fillRoundRect(xBorder + i * (width - 2 * xBorder) / 8, yBorder + j * (height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
                     } else {
                         g.setColor(Color.white);
-                        g.drawRoundRect(xBorder+i*(width-2*xBorder)/8, yBorder + j*(height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
+                        g.drawRoundRect(xBorder + i * (width - 2 * xBorder) / 8, yBorder + j * (height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
                     }
                 }
             }
             g.setColor(Color.black);
-            g.drawRect(xBorder,yBorder,width-2*xBorder,height-2*yBorder);
-            //for (int i = xBorder; i <= width - xBorder*2; i += ((width - 2 * xBorder) / 8)) {
-            // for (int j = yBorder; j <= height - yBorder*2; j += ((height - 2 * yBorder) / 8)) {
+            g.drawRect(xBorder, yBorder, width - 2 * xBorder, height - 2 * yBorder);
 
+            Textures.getImage('w','P').paintIcon(this, g, 100,100);
 
         }
     }

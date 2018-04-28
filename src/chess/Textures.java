@@ -6,10 +6,10 @@ import java.awt.*;
 public class Textures
 {
 
-    public static ImageIcon getImage (char c, char p){ // input in form w or b for color and toString for piece
+    public static ImageIcon getImage (char color, String piece){ // input in form w or b for color and toString for piece
         String localDir = System.getProperty("user.dir");
-        ImageIcon piece = new ImageIcon(localDir + "\\Pieces\\"+ c + p +".png");
-        return piece;
+        ImageIcon p = new ImageIcon(localDir + "\\Pieces\\"+ color + piece.trim() +".png");
+        return p;
 
     }
 

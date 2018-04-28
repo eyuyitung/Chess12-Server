@@ -16,8 +16,10 @@ public abstract class Piece {
 
     protected int x;
     protected int y;
+    Player p;
 
     public Piece(Player p, int x, int y) {
+        this.p = p;
         this.x = x;
         this.y = y;
     }
@@ -32,4 +34,11 @@ public abstract class Piece {
         }
         return true;
     }
+
+    public boolean sameColor(Board b, int x, int y, int _x, int _y){
+        if (b.getBoard()[_x][_y] != null)
+            return (b.getBoard()[x][y].p == b.getBoard()[_x][_y].p);
+        return false;
+    }
+
 }

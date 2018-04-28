@@ -15,16 +15,19 @@ import chess.Player;
 public class Rook extends Piece {
 
     private boolean inbetween = false;
+    private boolean moved;
 
     public Rook(Player p, int x, int y) {
         super(p, x, y);
+        moved = false;
     }
 
     @Override
     public boolean move(Board b, int _x, int _y) {
         System.out.println("ultra Troll");
 
-        if (isValid(x, y, _x, _y)) {
+        if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y)) {
+
             inbetween = false;
             // if(!(x != _x && y != _y)){
             System.out.println("ultra Troll");
@@ -43,17 +46,9 @@ public class Rook extends Piece {
                         }
                     }
                 }
-
-                if (!inbetween) {
-                    b.getBoard()[_x][_y] = b.getBoard()[x][y];
-                    b.getBoard()[x][y] = null;
-                    x = _x;
-                    System.out.println("big Troll");
-                    return true;
-                }
             }
 
-            if(y != _y && x == _x) {//vertical
+            else if(y != _y && x == _x) {//vertical
                 if (y < _y && _y - y >= 2) {
                     for (int i = y + 1; i < _y; i++) {
                         if (b.getBoard()[x][i] != null) {
@@ -67,13 +62,15 @@ public class Rook extends Piece {
                         }
                     }
                 }
-                if (!inbetween){
-                    b.getBoard()[_x][_y] = b.getBoard()[x][y];
-                    b.getBoard()[x][y] = null;
-                    y = _y;
-                    System.out.println("small Troll");
-                    return true;
-                }
+            }
+            if (!inbetween){
+                b.getBoard()[_x][_y] = b.getBoard()[x][y];
+                b.getBoard()[x][y] = null;
+                x = _x;
+                y = _y;
+                moved = true;
+                System.out.println("small Troll");
+                return true;
             }
         }
         return false;

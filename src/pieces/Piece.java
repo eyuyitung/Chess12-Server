@@ -16,7 +16,7 @@ public abstract class Piece {
 
     protected int x;
     protected int y;
-    Player p;
+    public Player p;
 
     public Piece(Player p, int x, int y) {
         this.p = p;

@@ -24,6 +24,7 @@ public class Board {
     int height = 750;
     JFrame frame = new JFrame("chess");
     Drawing drawing = new Drawing();
+
     public Board(Player white, Player black) {
         this.white = white;
         this.black = black;
@@ -89,17 +90,17 @@ public class Board {
     }
 
     class Drawing extends JComponent {
-        public Drawing()
-        {
+        public Drawing() {
             repaint();
         }
+
         public void paint(Graphics g) {
             int width = frame.getWidth();
             int height = frame.getHeight();
             int xBorder = width / 10;
             int yBorder = height / 10;
             int arcSize = 10;
-
+            char c;
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     if (i % 2 == 0) { // white top left
@@ -121,16 +122,15 @@ public class Board {
             }
             g.setColor(Color.black);
             g.drawRect(xBorder, yBorder, width - 2 * xBorder, height - 2 * yBorder);
-            //Textures.getImage('w', "P").paintIcon(this, g, 100, 100);
-//            Image img = Textures.getImage('w', "P").getImage();
-//            Image newImage = img.getScaledInstance(xBorder, yBorder,  java.awt.Image.SCALE_SMOOTH);
-//            ImageIcon sIcon = new ImageIcon(newImage);
-//            sIcon.paintIcon(this, g, xBorder,  yBorder);
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     if (board[j][i] != null) {
-                        Image image = Textures.getImage('w', board[j][i].toString()).getImage();
-                        Image newimg = image.getScaledInstance(xBorder, yBorder,  java.awt.Image.SCALE_SMOOTH);
+                        if (board[j][i].p.isWhite())
+                            c = 'w';
+                        else
+                            c = 'b';
+                        Image image = Textures.getImage(c, board[j][i].toString()).getImage();
+                        Image newimg = image.getScaledInstance(xBorder, yBorder, java.awt.Image.SCALE_SMOOTH);
                         ImageIcon scaledIcon = new ImageIcon(newimg);
                         scaledIcon.paintIcon(this, g, xBorder + j * xBorder, yBorder + i * yBorder);
                     }

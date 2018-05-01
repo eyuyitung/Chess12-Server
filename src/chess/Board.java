@@ -20,10 +20,13 @@ public class Board {
 
     Player white;
     Player black;
-    int x = 0, y = 0;
+
     int fx = -1, fy = -1;// mouse coordinate values
+    int dx = -1, dy = -1;
     private int width = 800;
     private int height = 800;
+    int xb = width / 10;
+    int yb = height / 10;
     boolean first;
     long tClick;
     long time = 0;
@@ -94,107 +97,105 @@ public class Board {
     }
 
     class MouseListen extends MouseAdapter {
-        public void mouseReleased(MouseEvent e) {
-            tClick = System.currentTimeMillis();
-            x = e.getX() - 3;
-            y = e.getY() - 25;
-            drawing.repaint();
-
-
-        }
-    }
-
-    public void mouseCoordinates() {
-
-        int xb = width / 10;
-        int yb = height / 10;
-
-        if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9 && board[x / xb][y / yb] != null) {
-            if (tClick > time) {
-                time = System.currentTimeMillis() + 1000;
-                if (first) {
-                    fx = x / xb - 1;
-                    fy = y / yb - 1;
-                    System.out.println("from : " + fx + " " + fy);
+        public void mousePressed(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+            if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
+                fx = (x - 3) / xb - 1;
+                fy = (y - 25) / yb - 1;
+                if (board[fx][fy] != null) {
                     first = false;
-                } else {
-                    try {
-                        int _x = x / xb - 1;
-                        int _y = y / yb - 1;
-                        if (getPiece(fx, fy).isValid(fx, fy, _x, _y)) {
-                            System.out.println("to : " + _x + " " + _y);
-                            getPiece(fx, fy).move(this, _x, _y);
-                            first = true;
-                            drawing.repaint();
+                    System.out.println("from : " + fx + " " + fy);
+                }
+                else
+                    fx = fy = -1;
+            } else {
+                first = true;
+                fx = fy = -1;
+            }
+
+
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+            if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
+                dx = (x - 3) / xb - 1;
+                dy = (y - 25) / yb - 1;
+                System.out.println("to : " + dx + " " + dy);
+                mouseMove();
+                drawing.repaint();
+            } else {
+                first = true;
+                fx = fy = dx = dy = -1;
+            }
+        }
+    }
+
+    public void mouseMove() {
+
+        try {
+            if (getPiece(fx, fy).isValid(fx, fy, dx, dy)) {
+                System.out.println("to : " + dx + " " + dy);
+                getPiece(fx, fy).move(this, dx, dy);
+                first = true;
+            }
+        } catch (Exception e) {
+            System.out.println("invalid move");
+            first = false;
+
+        }
+    }
+
+
+    class Drawing extends JComponent {
+        public Drawing() {
+            repaint();
+        }
+
+        public void paint(Graphics g) {
+            int arcSize = 10;
+            char c;
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (i % 2 == 0) { // white top left
+                        if (j % 2 != 0) {
+                            g.setColor(Color.decode("#98dfe2"));
+                            g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
                         }
-                    } catch (Exception e) {
-                        System.out.println("invalid move");
-                        first = false;
-
-                    }
-
-                }
-            }
-        }
-    }
-
-
-
-
-class Drawing extends JComponent {
-    public Drawing() {
-        repaint();
-    }
-
-    public void paint(Graphics g) {
-        int xBorder = width / 10;
-        int yBorder = height / 10;
-        int arcSize = 10;
-        char c;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (i % 2 == 0) { // white top left
-                    if (j % 2 != 0) {
+                    } else if (j % 2 == 0) {
                         g.setColor(Color.decode("#98dfe2"));
-                        g.fillRoundRect(xBorder + i * (xBorder), yBorder + j * (yBorder), xBorder, yBorder, arcSize, arcSize);
+                        g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
                     }
-                } else if (j % 2 == 0) {
-                    g.setColor(Color.decode("#98dfe2"));
-                    g.fillRoundRect(xBorder + i * (xBorder), yBorder + j * (yBorder), xBorder, yBorder, arcSize, arcSize);
                 }
             }
-        }
-        g.setColor(Color.black);
-        g.drawRect(xBorder, yBorder, xBorder * 8, yBorder * 8);
+            g.setColor(Color.black);
+            g.drawRect(xb, yb, xb * 8, yb * 8);
 
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (board[j][i] != null) {
-                    if (board[j][i].p.isWhite())
-                        c = 'w';
-                    else
-                        c = 'b';
-                    Image image = Textures.getImage(c, board[j][i].toString()).getImage();
-                    Image newimg = image.getScaledInstance(xBorder, yBorder, java.awt.Image.SCALE_SMOOTH);
-                    ImageIcon scaledIcon = new ImageIcon(newimg);
-                    scaledIcon.paintIcon(this, g, xBorder + j * xBorder, yBorder + i * yBorder);
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (board[j][i] != null) {
+                        if (board[j][i].p.isWhite())
+                            c = 'w';
+                        else
+                            c = 'b';
+                        Image image = Textures.getImage(c, board[j][i].toString()).getImage();
+                        Image newimg = image.getScaledInstance(xb, yb, java.awt.Image.SCALE_SMOOTH);
+                        ImageIcon scaledIcon = new ImageIcon(newimg);
+                        scaledIcon.paintIcon(this, g, xb + j * xb, yb + i * yb);
+                    }
                 }
+                // Textures.getImage('w', (board[j][i]).toString()).paintIcon(this, g, xBorder + j * xBorder, yBorder + i * yBorder);
             }
-            // Textures.getImage('w', (board[j][i]).toString()).paintIcon(this, g, xBorder + j * xBorder, yBorder + i * yBorder);
+            g.drawRect(xb, yb, xb * 8, yb * 8);
+            int ly = 0;
+            int lx = 0;
+            for (int row = yb; row < yb * 9; row += yb)
+                g.drawString(Integer.toString(ly++), xb - 10, row + 30);
+            for (int col = xb; col < xb * 9; col += xb)
+                g.drawString(Integer.toString(lx++), col + 30, yb - 10);
         }
-        g.drawRect(xBorder, yBorder, xBorder * 8, yBorder * 8);
-        int yy = 0;
-        int xx = 0;
-        for (int row = yBorder; row < yBorder * 9; row += yBorder)
-            g.drawString(Integer.toString(yy++), xBorder - 10, row + 30);
-        for (int col = xBorder; col < xBorder * 9; col += xBorder)
-            g.drawString(Integer.toString(xx++), col + 30, yBorder - 10);
-
-
-        mouseCoordinates();
-        System.out.println((x / xBorder - 1) + " " + (y / yBorder - 1));
-        System.out.println(x + " " + y);
     }
-}
 }
 

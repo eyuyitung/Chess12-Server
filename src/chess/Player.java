@@ -8,7 +8,7 @@ import pieces.Piece;
 public class Player {
 
     private ArrayList<Piece> capturedPieces;
-    private boolean white;
+    public boolean white;
 
 
     public Player(boolean b) {

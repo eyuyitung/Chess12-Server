@@ -22,15 +22,22 @@ public class Handler {
 
     public void run() { //change to tick / render
         board.display();
+        boolean CurrentPlayer = true;
         while(true) {
+
+
             System.out.println("from");
             int x = Integer.parseInt(s.nextLine());
             int y = Integer.parseInt(s.nextLine());
             System.out.println("to");
             int _x = Integer.parseInt(s.nextLine());
             int _y = Integer.parseInt(s.nextLine());
+            System.out.println(CurrentPlayer);
+            System.out.println(board.getPiece(x, y).p.white);
+            if (CurrentPlayer == board.getPiece(x, y).p.white && board.getPiece(x, y).move(board, _x, _y)) {
+                CurrentPlayer = !CurrentPlayer;
 
-            board.getPiece(x, y).move(board, _x, _y);
+            }
             board.display();
         }
 

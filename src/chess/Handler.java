@@ -1,6 +1,7 @@
 
 package chess;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 
@@ -23,15 +24,19 @@ public class Handler {
     public void run() { //change to tick / render
         board.display();
         while(true) {
-            System.out.println("from");
-            int x = Integer.parseInt(s.nextLine());
-            int y = Integer.parseInt(s.nextLine());
-            System.out.println("to");
-            int _x = Integer.parseInt(s.nextLine());
-            int _y = Integer.parseInt(s.nextLine());
+            try {
+                System.out.println("from");
+                int x = Integer.parseInt(s.nextLine());
+                int y = Integer.parseInt(s.nextLine());
+                System.out.println("to");
+                int _x = Integer.parseInt(s.nextLine());
+                int _y = Integer.parseInt(s.nextLine());
 
             board.getPiece(x, y).move(board, _x, _y);
             board.display();
+            } catch (Exception e){
+                System.out.println("invalid move.");
+            }
         }
 
     }

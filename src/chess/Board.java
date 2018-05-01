@@ -10,6 +10,7 @@ import pieces.Queen;
 import pieces.Rook;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 
@@ -19,26 +20,29 @@ public class Board {
 
     Player white;
     Player black;
-
-    int width = 900;
-    int height = 750;
-    JFrame frame = new JFrame("chess");
+    int x = 0, y = 0;
+    int fx = -1, fy = -1;// mouse coordinate values
+    private int width = 800;
+    private int height = 800;
+    boolean first;
+    long tClick;
+    long time = 0;
+    JFrame frame = new JFrame("Chess");
     Drawing drawing = new Drawing();
 
     public Board(Player white, Player black) {
         this.white = white;
         this.black = black;
-
         initFrame();
         initializePieces();
-
     }
 
     public void initFrame() {
-
+        first = false;
         frame.setSize(width, height);
-        frame.setLayout(new GridLayout());
-        frame.add(drawing);
+        frame.getContentPane().add(drawing);
+        frame.addMouseListener(new MouseListen());
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 
@@ -78,7 +82,7 @@ public class Board {
             }
             System.out.println();
         }
-        drawing.repaint();
+        // drawing.repaint();
     }
 
     public Piece[][] getBoard() {
@@ -89,56 +93,108 @@ public class Board {
         return board[x][y];
     }
 
-    class Drawing extends JComponent {
-        public Drawing() {
-            repaint();
-        }
+    class MouseListen extends MouseAdapter {
+        public void mouseReleased(MouseEvent e) {
+            tClick = System.currentTimeMillis();
+            x = e.getX() - 3;
+            y = e.getY() - 25;
+            drawing.repaint();
 
-        public void paint(Graphics g) {
-            int width = frame.getWidth();
-            int height = frame.getHeight();
-            int xBorder = width / 10;
-            int yBorder = height / 10;
-            int arcSize = 10;
-            char c;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    if (i % 2 == 0) { // white top left
-                        if (j % 2 == 0) {
-                            g.setColor(Color.white);
-                            g.drawRoundRect(xBorder + i * (width - 2 * xBorder) / 8, yBorder + j * (height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
-                        } else {
-                            g.setColor(Color.decode("#98dfe2"));
-                            g.fillRoundRect(xBorder + i * (width - 2 * xBorder) / 8, yBorder + j * (height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
+
+        }
+    }
+
+    public void mouseCoordinates() {
+
+        int xb = width / 10;
+        int yb = height / 10;
+
+        if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9 && board[x / xb][y / yb] != null) {
+            if (tClick > time) {
+                time = System.currentTimeMillis() + 1000;
+                if (first) {
+                    fx = x / xb - 1;
+                    fy = y / yb - 1;
+                    System.out.println("from : " + fx + " " + fy);
+                    first = false;
+                } else {
+                    try {
+                        int _x = x / xb - 1;
+                        int _y = y / yb - 1;
+                        if (getPiece(fx, fy).isValid(fx, fy, _x, _y)) {
+                            System.out.println("to : " + _x + " " + _y);
+                            getPiece(fx, fy).move(this, _x, _y);
+                            first = true;
+                            drawing.repaint();
                         }
-                    } else if (j % 2 == 0) {
-                        g.setColor(Color.decode("#98dfe2"));
-                        g.fillRoundRect(xBorder + i * (width - 2 * xBorder) / 8, yBorder + j * (height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
-                    } else {
-                        g.setColor(Color.white);
-                        g.drawRoundRect(xBorder + i * (width - 2 * xBorder) / 8, yBorder + j * (height - 2 * yBorder) / 8, (width - 2 * xBorder) / 8, (height - 2 * yBorder) / 8, arcSize, arcSize);
+                    } catch (Exception e) {
+                        System.out.println("invalid move");
+                        first = false;
+
                     }
+
                 }
-            }
-            g.setColor(Color.black);
-            g.drawRect(xBorder, yBorder, width - 2 * xBorder, height - 2 * yBorder);
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    if (board[j][i] != null) {
-                        if (board[j][i].p.isWhite())
-                            c = 'w';
-                        else
-                            c = 'b';
-                        Image image = Textures.getImage(c, board[j][i].toString()).getImage();
-                        Image newimg = image.getScaledInstance(xBorder, yBorder, java.awt.Image.SCALE_SMOOTH);
-                        ImageIcon scaledIcon = new ImageIcon(newimg);
-                        scaledIcon.paintIcon(this, g, xBorder + j * xBorder, yBorder + i * yBorder);
-                    }
-                }
-                // Textures.getImage('w', (board[j][i]).toString()).paintIcon(this, g, xBorder + j * xBorder, yBorder + i * yBorder);
             }
         }
     }
-}
 
+
+
+
+class Drawing extends JComponent {
+    public Drawing() {
+        repaint();
+    }
+
+    public void paint(Graphics g) {
+        int xBorder = width / 10;
+        int yBorder = height / 10;
+        int arcSize = 10;
+        char c;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (i % 2 == 0) { // white top left
+                    if (j % 2 != 0) {
+                        g.setColor(Color.decode("#98dfe2"));
+                        g.fillRoundRect(xBorder + i * (xBorder), yBorder + j * (yBorder), xBorder, yBorder, arcSize, arcSize);
+                    }
+                } else if (j % 2 == 0) {
+                    g.setColor(Color.decode("#98dfe2"));
+                    g.fillRoundRect(xBorder + i * (xBorder), yBorder + j * (yBorder), xBorder, yBorder, arcSize, arcSize);
+                }
+            }
+        }
+        g.setColor(Color.black);
+        g.drawRect(xBorder, yBorder, xBorder * 8, yBorder * 8);
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[j][i] != null) {
+                    if (board[j][i].p.isWhite())
+                        c = 'w';
+                    else
+                        c = 'b';
+                    Image image = Textures.getImage(c, board[j][i].toString()).getImage();
+                    Image newimg = image.getScaledInstance(xBorder, yBorder, java.awt.Image.SCALE_SMOOTH);
+                    ImageIcon scaledIcon = new ImageIcon(newimg);
+                    scaledIcon.paintIcon(this, g, xBorder + j * xBorder, yBorder + i * yBorder);
+                }
+            }
+            // Textures.getImage('w', (board[j][i]).toString()).paintIcon(this, g, xBorder + j * xBorder, yBorder + i * yBorder);
+        }
+        g.drawRect(xBorder, yBorder, xBorder * 8, yBorder * 8);
+        int yy = 0;
+        int xx = 0;
+        for (int row = yBorder; row < yBorder * 9; row += yBorder)
+            g.drawString(Integer.toString(yy++), xBorder - 10, row + 30);
+        for (int col = xBorder; col < xBorder * 9; col += xBorder)
+            g.drawString(Integer.toString(xx++), col + 30, yBorder - 10);
+
+
+        mouseCoordinates();
+        System.out.println((x / xBorder - 1) + " " + (y / yBorder - 1));
+        System.out.println(x + " " + y);
+    }
+}
+}
 

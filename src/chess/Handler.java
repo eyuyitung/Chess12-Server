@@ -25,15 +25,17 @@ public class Handler {
         boolean CurrentPlayer = true;
         while(true) {
 
+            if(CurrentPlayer)
+                System.out.println("CurrentPlayer: White");
+            else
+                System.out.println("CurrentPlayer: Black");
 
-            System.out.println("from");
+            System.out.println("From");
             int x = Integer.parseInt(s.nextLine());
             int y = Integer.parseInt(s.nextLine());
-            System.out.println("to");
+            System.out.println("To");
             int _x = Integer.parseInt(s.nextLine());
             int _y = Integer.parseInt(s.nextLine());
-            System.out.println(CurrentPlayer);
-            System.out.println(board.getPiece(x, y).p.white);
             if (CurrentPlayer == board.getPiece(x, y).p.white && board.getPiece(x, y).move(board, _x, _y)) {
                 CurrentPlayer = !CurrentPlayer;
 

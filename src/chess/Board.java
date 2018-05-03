@@ -31,6 +31,7 @@ public class Board {
     long time = 0;
     JFrame frame = new JFrame("Chess");
     Drawing drawing = new Drawing();
+    boolean isWhite = true;
 
     public Board(Player white, Player black) {
         this.white = white;
@@ -103,15 +104,11 @@ public class Board {
                 fy = (y - 25) / yb - 1;
                 if (board[fx][fy] != null) {
                     System.out.println("from : " + fx + " " + fy);
-                }
-                else
+                } else
                     fx = fy = -1;
             } else {
-
                 fx = fy = -1;
             }
-
-
         }
 
         public void mouseReleased(MouseEvent e) {
@@ -133,10 +130,23 @@ public class Board {
     public void mouseMove() {
 
         try {
-                System.out.println("to : " + dx + " " + dy);
-                getPiece(fx, fy).move(this, dx, dy);
+            System.out.println("to : " + dx + " " + dy);
+            if (isWhite) {
+                if (getPiece(fx, fy).p.isWhite()) {
+                    getPiece(fx, fy).move(this, dx, dy);
+                    isWhite = !isWhite;
+                }
+            } else {
+                if (!getPiece(fx, fy).p.isWhite()) {
+                    getPiece(fx, fy).move(this, dx, dy);
+                    isWhite = !isWhite;
+                }
+            }
 
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             System.out.println("invalid move");
 
 
@@ -181,7 +191,6 @@ public class Board {
                         scaledIcon.paintIcon(this, g, xb + j * xb, yb + i * yb);
                     }
                 }
-                // Textures.getImage('w', (board[j][i]).toString()).paintIcon(this, g, xBorder + j * xBorder, yBorder + i * yBorder);
             }
             g.drawRect(xb, yb, xb * 8, yb * 8);
             int ly = 0;

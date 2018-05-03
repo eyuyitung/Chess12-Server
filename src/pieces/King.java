@@ -15,7 +15,7 @@ public class King extends Piece {
     @Override
     public boolean move(Board b, int _x, int _y) {
         if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y)) {
-            if (x + 1 == _x || x - 1 == _x || y + 1 == _y || y - 1 == _y) {
+            if (Math.abs(x - _x) <= 1 && y == _y || Math.abs(y - _y) <= 1 && x == _x || Math.abs(x - _x) == 1 && Math.abs(y - _y) == 1) {
                 b.getBoard()[_x][_y] = b.getBoard()[x][y];
                 b.getBoard()[x][y] = null;
                 x = _x;

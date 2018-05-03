@@ -30,8 +30,42 @@ public class Pawn extends Piece {
     @Override
     public boolean move(Board b, int _x, int _y) {
         if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y)) {
-            if (x == _x && y + movement == _y || !moved && y + 2 * movement == _y) {
-                b.getBoard()[_x][_y] = b.getBoard()[x][y];
+            if ((x == _x && y + movement == _y || !moved && y + 2 * movement == _y) && b.getBoard()[_x][_y] == null) {
+                if(_y == 0 && movement == -1){
+                    b.getBoard()[_x][_y] = new Queen(b.white, _x, 0);
+                } else if(_y == 7 && movement == 1){
+                    b.getBoard()[_x][_y] = new Queen(b.black, _x, 7);
+                } else {
+                    b.getBoard()[_x][_y] = b.getBoard()[x][y];
+                }
+                b.getBoard()[x][y] = null;
+                moved = true;
+                x = _x;
+                y = _y;
+                return true;
+            }
+            else if (p.isWhite() && Math.abs(x - _x) == 1 && (y - _y) == 1 && b.getBoard()[_x][_y] != null) {
+                if(_y == 0 && movement == -1){
+                    b.getBoard()[_x][_y] = new Queen(b.white, _x, 0);
+                } else if(_y == 7 && movement == 1){
+                    b.getBoard()[_x][_y] = new Queen(b.black, _x, 7);
+                } else {
+                    b.getBoard()[_x][_y] = b.getBoard()[x][y];
+                }
+                b.getBoard()[x][y] = null;
+                moved = true;
+                x = _x;
+                y = _y;
+                return true;
+            }
+            else if (!p.isWhite() && Math.abs(x - _x) == 1 && (y - _y) == -1 && b.getBoard()[_x][_y] != null) {
+                if(_y == 0 && movement == -1){
+                    b.getBoard()[_x][_y] = new Queen(b.white, _x, 0);
+                } else if(_y == 7 && movement == 1){
+                    b.getBoard()[_x][_y] = new Queen(b.black, _x, 7);
+                } else {
+                    b.getBoard()[_x][_y] = b.getBoard()[x][y];
+                }
                 b.getBoard()[x][y] = null;
                 moved = true;
                 x = _x;

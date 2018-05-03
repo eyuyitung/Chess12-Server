@@ -18,8 +18,8 @@ public class Board {
 
     Piece[][] board = new Piece[8][8];
 
-    Player white;
-    Player black;
+    public Player white;
+    public Player black;
 
     int fx = -1, fy = -1;// mouse coordinate values
     int dx = -1, dy = -1;
@@ -103,7 +103,7 @@ public class Board {
                 fx = (x - 3) / xb - 1;
                 fy = (y - 25) / yb - 1;
                 if (board[fx][fy] != null) {
-                    System.out.println("from : " + fx + " " + fy);
+                    System.out.println("From : " + fx + " " + fy);
                 } else
                     fx = fy = -1;
             } else {
@@ -117,11 +117,10 @@ public class Board {
             if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
                 dx = (x - 3) / xb - 1;
                 dy = (y - 25) / yb - 1;
-                System.out.println("to : " + dx + " " + dy);
+                System.out.println("To : " + dx + " " + dy);
                 mouseMove();
                 drawing.repaint();
             } else {
-
                 fx = fy = dx = dy = -1;
             }
         }
@@ -131,25 +130,21 @@ public class Board {
 
         try {
             System.out.println("to : " + dx + " " + dy);
-            if (isWhite) {
-                if (getPiece(fx, fy).p.isWhite()) {
-                    getPiece(fx, fy).move(this, dx, dy);
-                    isWhite = !isWhite;
-                }
-            } else {
-                if (!getPiece(fx, fy).p.isWhite()) {
-                    getPiece(fx, fy).move(this, dx, dy);
-                    isWhite = !isWhite;
+            if(!(fx == dx && fy == dy)) {
+                if (isWhite) {
+                    if (getPiece(fx, fy).p.isWhite()) {
+                        if(getPiece(fx, fy).move(this, dx, dy))
+                            isWhite = !isWhite;
+                    }
+                } else {
+                    if (!getPiece(fx, fy).p.isWhite()) {
+                        if(getPiece(fx, fy).move(this, dx, dy))
+                            isWhite = !isWhite;
+                    }
                 }
             }
-
-        } catch (
-                Exception e)
-
-        {
+        } catch ( Exception e) {
             System.out.println("invalid move");
-
-
         }
     }
 

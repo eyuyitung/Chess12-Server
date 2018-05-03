@@ -27,7 +27,6 @@ public class Board {
     private int height = 800;
     int xb = width / 10;
     int yb = height / 10;
-    boolean first;
     long tClick;
     long time = 0;
     JFrame frame = new JFrame("Chess");
@@ -41,7 +40,6 @@ public class Board {
     }
 
     public void initFrame() {
-        first = false;
         frame.setSize(width, height);
         frame.getContentPane().add(drawing);
         frame.addMouseListener(new MouseListen());
@@ -104,13 +102,12 @@ public class Board {
                 fx = (x - 3) / xb - 1;
                 fy = (y - 25) / yb - 1;
                 if (board[fx][fy] != null) {
-                    first = false;
                     System.out.println("from : " + fx + " " + fy);
                 }
                 else
                     fx = fy = -1;
             } else {
-                first = true;
+
                 fx = fy = -1;
             }
 
@@ -127,7 +124,7 @@ public class Board {
                 mouseMove();
                 drawing.repaint();
             } else {
-                first = true;
+
                 fx = fy = dx = dy = -1;
             }
         }
@@ -136,14 +133,12 @@ public class Board {
     public void mouseMove() {
 
         try {
-            if (getPiece(fx, fy).isValid(fx, fy, dx, dy)) {
                 System.out.println("to : " + dx + " " + dy);
                 getPiece(fx, fy).move(this, dx, dy);
-                first = true;
-            }
+
         } catch (Exception e) {
             System.out.println("invalid move");
-            first = false;
+
 
         }
     }

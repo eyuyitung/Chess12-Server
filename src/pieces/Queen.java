@@ -80,16 +80,15 @@ public class Queen extends Piece {
                     }
                 }
             }
-                if (!inbetween) {
-                    b.getBoard()[_x][_y] = b.getBoard()[x][y];
-                    b.getBoard()[x][y] = null;
-                    x = _x;
-                    y = _y;
-                    System.out.println("big Troll");
-                    return true;
-
-                }
+            if (!inbetween && (x != _x && y == _y || y != _y && x == _x || Math.abs(x - _x)== Math.abs(y - _y))) {
+                b.getBoard()[_x][_y] = b.getBoard()[x][y];
+                b.getBoard()[x][y] = null;
+                x = _x;
+                y = _y;
+                System.out.println("big Troll");
+                return true;
             }
+        }
         return false;
     }
 

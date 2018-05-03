@@ -23,18 +23,24 @@ public class Handler {
 
     public void run() { //change to tick / render
         board.display();
-        while(true) {
+        boolean CurrentPlayer = true;
+        while (true) {
             try {
-                System.out.println("from");
+                if (CurrentPlayer)
+                    System.out.println("CurrentPlayer: White");
+                else
+                    System.out.println("CurrentPlayer: Black");
+                System.out.println("From");
                 int x = Integer.parseInt(s.nextLine());
                 int y = Integer.parseInt(s.nextLine());
-                System.out.println("to");
+                System.out.println("To");
                 int _x = Integer.parseInt(s.nextLine());
                 int _y = Integer.parseInt(s.nextLine());
-
-            board.getPiece(x, y).move(board, _x, _y);
-            board.display();
-            } catch (Exception e){
+                if (CurrentPlayer == board.getPiece(x, y).p.white && board.getPiece(x, y).move(board, _x, _y)) {
+                    CurrentPlayer = !CurrentPlayer;
+                }
+                board.display();
+            } catch (Exception e) {
                 System.out.println("invalid move.");
             }
         }

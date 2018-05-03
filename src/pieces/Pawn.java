@@ -20,9 +20,9 @@ public class Pawn extends Piece {
     public Pawn(Player p, int x, int y) {
         super(p, x, y);
         if (p.isWhite()) {
-            movement = 1;
-        } else {
             movement = -1;
+        } else {
+            movement = 1;
         }
         moved = false;
     }

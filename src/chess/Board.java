@@ -31,7 +31,11 @@ public class Board {
     long time = 0;
     JFrame frame = new JFrame("Chess");
     Drawing drawing = new Drawing();
-    boolean isWhite = true;
+    public boolean isWhite = true;
+    public int whiteKingLocX;
+    public int whiteKingLocY;
+    public int blackKingLocX;
+    public int blackKingLocY;
 
     public Board(Player white, Player black) {
         this.white = white;

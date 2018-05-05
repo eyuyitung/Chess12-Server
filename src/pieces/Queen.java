@@ -24,7 +24,7 @@ public class Queen extends Piece {
     public boolean move(Board b, int _x, int _y) {
         System.out.println("ultra Troll");
 
-        if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y)) {
+        if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y) && !isKing(b,_x,_y)) {
             inbetween = false;
 
             System.out.println("ultra Troll");

@@ -41,4 +41,11 @@ public abstract class Piece {
         return false;
     }
 
+
+    public boolean isKing(Board b, int _x, int _y){
+        if (b.getBoard()[_x][_y] != null)
+            return (b.getBoard()[_x][_y] instanceof King);
+        return false;
+    }
+
 }

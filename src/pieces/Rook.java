@@ -15,7 +15,7 @@ import chess.Player;
 public class Rook extends Piece {
 
     private boolean inbetween = false;
-    private boolean moved;
+    public boolean moved;
 
     public Rook(Player p, int x, int y) {
         super(p, x, y);
@@ -24,13 +24,13 @@ public class Rook extends Piece {
 
     @Override
     public boolean move(Board b, int _x, int _y) {
-        System.out.println("ultra Troll");
+        //System.out.println("ultra Troll");
 
         if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y) && !isKing(b,_x,_y)) {
 
             inbetween = false;
             // if(!(x != _x && y != _y)){
-            System.out.println("ultra Troll");
+            //System.out.println("ultra Troll");
 
             if(x != _x && y == _y){//horizontal
                 if (x < _x && _x - x >= 2) {
@@ -63,16 +63,22 @@ public class Rook extends Piece {
                     }
                 }
             }
+            System.out.println(x);
             if (!inbetween){
                 b.getBoard()[_x][_y] = b.getBoard()[x][y];
                 b.getBoard()[x][y] = null;
                 x = _x;
                 y = _y;
                 moved = true;
-                System.out.println("small Troll");
+                //System.out.println("small Troll");
                 return true;
             }
         }
+        return false;
+    }
+
+    @Override
+    public boolean check(Board b) {
         return false;
     }
 

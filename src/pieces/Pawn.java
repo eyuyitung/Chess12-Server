@@ -77,6 +77,20 @@ public class Pawn extends Piece {
     }
 
     @Override
+    public boolean check(Board b) {
+        if(b.getPiece(x,y).p == b.white && b.blackKingLocY == y - 1 && (x - 1 == b.blackKingLocX || x + 1 == b.blackKingLocX)){
+            return true;
+        }
+        else if(b.getPiece(x,y).p == b.black && b.whiteKingLocY == y + 1 && (x - 1 == b.whiteKingLocX || x + 1 == b.whiteKingLocX)){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+    @Override
     public String toString() {
         return "P ";
     }

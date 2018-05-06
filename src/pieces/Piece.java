@@ -26,6 +26,8 @@ public abstract class Piece {
 
     public abstract boolean move(Board b, int _x, int _y);
 
+    public abstract boolean check(Board b);
+
     public boolean isValid(int fromX, int fromY, int toX, int toY) {
         if (toX == fromX && toY == fromY) {
             return false;

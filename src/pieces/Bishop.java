@@ -12,7 +12,7 @@ public class Bishop extends Piece {
 
     @Override
     public boolean move(Board b, int _x, int _y) {
-        System.out.println("ultra Troll");
+        //System.out.println("ultra Troll");
 
         if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y) && !isKing(b,_x,_y)) {
 
@@ -55,12 +55,17 @@ public class Bishop extends Piece {
                     b.getBoard()[x][y] = null;
                     x = _x;
                     y = _y;
-                    System.out.println("big Troll");
+                   // System.out.println("big Troll");
                     return true;
 
                 }
             }
         }
+        return false;
+    }
+
+    @Override
+    public boolean check(Board b) {
         return false;
     }
 

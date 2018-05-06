@@ -75,6 +75,10 @@ public class Board {
         board[6][7] = (new Knight(white, 6, 7));
         board[3][7] = (new Queen(white, 3, 7));
         board[4][7] = (new King(white, 4, 7));
+        whiteKingLocX = 4;
+        whiteKingLocY = 7;
+        blackKingLocX = 4;
+        blackKingLocY = 0;
     }
 
     public void display() {
@@ -135,20 +139,27 @@ public class Board {
         try {
             System.out.println("to : " + dx + " " + dy);
             if(!(fx == dx && fy == dy)) {
+                //System.out.println("White: " + whiteKingLocX + "," + whiteKingLocY);
+                //System.out.println("Black: " + blackKingLocX + "," + blackKingLocY);
                 if (isWhite) {
                     if (getPiece(fx, fy).p.isWhite()) {
-                        if(getPiece(fx, fy).move(this, dx, dy))
+                        if(getPiece(fx, fy).move(this, dx, dy)) {
                             isWhite = !isWhite;
+                            System.out.println(getPiece(dx, dy).check(this));
+                            System.out.println(blackKingLocX + "," + blackKingLocY);
+                        }
                     }
                 } else {
                     if (!getPiece(fx, fy).p.isWhite()) {
-                        if(getPiece(fx, fy).move(this, dx, dy))
+                        if(getPiece(fx, fy).move(this, dx, dy)) {
                             isWhite = !isWhite;
+                            System.out.println(getPiece(dx, dy).check(this));
+                        }
                     }
                 }
             }
         } catch ( Exception e) {
-            System.out.println("invalid move");
+            System.out.println("Invalid move");
         }
     }
 

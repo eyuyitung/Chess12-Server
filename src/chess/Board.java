@@ -36,6 +36,8 @@ public class Board {
     public int whiteKingLocY;
     public int blackKingLocX;
     public int blackKingLocY;
+    public boolean whiteKingChecked;
+    public boolean blackKingChecked;
 
     public Board(Player white, Player black) {
         this.white = white;
@@ -79,6 +81,8 @@ public class Board {
         whiteKingLocY = 7;
         blackKingLocX = 4;
         blackKingLocY = 0;
+        whiteKingChecked = false;
+        blackKingChecked = false;
     }
 
     public void display() {
@@ -143,7 +147,8 @@ public class Board {
                 //System.out.println("Black: " + blackKingLocX + "," + blackKingLocY);
                 if (isWhite) {
                     if (getPiece(fx, fy).p.isWhite()) {
-                        if(getPiece(fx, fy).move(this, dx, dy)) {
+                        if(getPiece(fx, fy).checkValidMove(this, dx, dy)) {
+                            getPiece(fx,fy).move(this, dx, dy);
                             isWhite = !isWhite;
                             System.out.println(getPiece(dx, dy).check(this));
                             System.out.println(blackKingLocX + "," + blackKingLocY);
@@ -151,7 +156,8 @@ public class Board {
                     }
                 } else {
                     if (!getPiece(fx, fy).p.isWhite()) {
-                        if(getPiece(fx, fy).move(this, dx, dy)) {
+                        if(getPiece(fx, fy).checkValidMove(this, dx, dy)) {
+                            getPiece(fx,fy).move(this, dx, dy);
                             isWhite = !isWhite;
                             System.out.println(getPiece(dx, dy).check(this));
                         }

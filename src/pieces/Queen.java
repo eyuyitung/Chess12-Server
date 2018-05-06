@@ -21,15 +21,10 @@ public class Queen extends Piece {
     }
 
     @Override
-    public boolean move(Board b, int _x, int _y) {
-        //System.out.println("ultra Troll");
-
-        if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y) && !isKing(b,_x,_y)) {
+    public boolean checkValidMove(Board b, int _x, int _y) {
+        if (isValid(x, y, _x, _y) && !sameColor(b, x, y, _x, _y) && !isKing(b, _x, _y)) {
             inbetween = false;
-
-            //System.out.println("ultra Troll");
-
-            if(x != _x && y == _y){//horizontal
+            if (x != _x && y == _y) {//horizontal
                 if (x < _x && _x - x >= 2) {
                     for (int i = x + 1; i < _x; i++) {
                         if (b.getBoard()[i][y] != null) {
@@ -43,8 +38,7 @@ public class Queen extends Piece {
                         }
                     }
                 }
-            }
-            else if(y != _y && x == _x) {//vertical
+            } else if (y != _y && x == _x) {//vertical
                 if (y < _y && _y - y >= 2) {
                     for (int i = y + 1; i < _y; i++) {
                         if (b.getBoard()[x][i] != null) {
@@ -58,8 +52,7 @@ public class Queen extends Piece {
                         }
                     }
                 }
-            }
-            else if(Math.abs(x - _x)== Math.abs(y - _y)) { //check if moving in diagonal line
+            } else if (Math.abs(x - _x) == Math.abs(y - _y)) { //check if moving in diagonal line
                 if (Math.abs(x - _x) >= 2) {
                     if (_x < x && _y < y) { //top left
                         for (int i = _x + 1, j = _y + 1; i < x; i++, j++)
@@ -80,17 +73,23 @@ public class Queen extends Piece {
                     }
                 }
             }
-            if (!inbetween && (x != _x && y == _y || y != _y && x == _x || Math.abs(x - _x)== Math.abs(y - _y))) {
-                b.getBoard()[_x][_y] = b.getBoard()[x][y];
-                b.getBoard()[x][y] = null;
-                x = _x;
-                y = _y;
-                //System.out.println("big Troll");
+            if (!inbetween && (x != _x && y == _y || y != _y && x == _x || Math.abs(x - _x) == Math.abs(y - _y))) {
                 return true;
             }
         }
         return false;
     }
+
+    @Override
+    public void move(Board b, int _x, int _y) {
+        if(checkValidMove(b, _x, _y)){
+            b.getBoard()[_x][_y] = b.getBoard()[x][y];
+            b.getBoard()[x][y] = null;
+            x = _x;
+            y = _y;
+        }
+    }
+
 
     @Override
     public boolean check(Board b) {

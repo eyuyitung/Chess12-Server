@@ -6,7 +6,7 @@ import chess.Player;
 public class King extends Piece {
 
     boolean moved;
-    boolean checked;
+    boolean castle = false;
 
     public King(Player p, int x, int y) {
         super(p, x, y);
@@ -14,89 +14,71 @@ public class King extends Piece {
     }
 
     @Override
-    public boolean move(Board b, int _x, int _y) {
-        if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y) && !nearKing(b,x,y,_x,_y)) {
-
-                if (Math.abs(x - _x) <= 1 && y == _y || Math.abs(y - _y) <= 1 && x == _x || Math.abs(x - _x) == 1 && Math.abs(y - _y) == 1) {
-
-                    if(b.isWhite){
-                        b.whiteKingLocX = _x;
-                        b.whiteKingLocY = _y;
-                    }
-                    else{
-                        b. blackKingLocX = _x;
-                        b.blackKingLocY = _y;
-                    }
-
-                    b.getBoard()[_x][_y] = b.getBoard()[x][y];
-                    b.getBoard()[x][y] = null;
-                    x = _x;
-                    y = _y;
-                    moved = true;
+    public boolean checkValidMove(Board b, int _x, int _y) {
+        if (isValid(x, y, _x, _y) && !sameColor(b, x, y, _x, _y) && !nearKing(b, x, y, _x, _y)) {
+            if (Math.abs(x - _x) <= 1 && y == _y || Math.abs(y - _y) <= 1 && x == _x || Math.abs(x - _x) == 1 && Math.abs(y - _y) == 1) {
+                castle = false;
+                return true;
+            } else if (!moved && b.isWhite) {
+                if (_x == 2 && checkCastle(b.getPiece(0, 7)) && b.getBoard()[1][7] == null && b.getBoard()[2][7] == null && b.getBoard()[3][7] == null) { //Queen
+                    castle = true;
+                    return true;
+                } else if (_x == 6 && checkCastle(b.getPiece(7, 7)) && b.getBoard()[5][7] == null && b.getBoard()[6][7] == null) { //King side
+                    castle = true;
                     return true;
                 }
-                else if(!moved && b.isWhite){
-                    if(_x == 2 && checkCastle(b.getPiece(0,7)) && b.getBoard()[1][7] == null && b.getBoard()[2][7] == null && b.getBoard()[3][7] == null){ //Queen Side
-                        b.getBoard()[_x][_y] = b.getBoard()[x][y];
-                        b.getBoard()[x][y] = null;
-                        b.getBoard()[_x][_y].x = _x;
-                        b.getBoard()[_x][_y].y = _y;
-                        b.getBoard()[3][7] = b.getBoard()[0][7];
-                        b.getBoard()[0][7] = null;
-                        b.getBoard()[3][7].x = 3;
-                        b.getBoard()[3][7].y = 7;
-                        b.whiteKingLocX = _x;
-                        b.whiteKingLocY = _y;
-                        moved = true;
-                        return true;
-                    }
-                    else if(_x == 6 && checkCastle(b.getPiece(7,7)) && b.getBoard()[5][7] == null && b.getBoard()[6][7] == null) { //King side
-                        b.getBoard()[_x][_y] = b.getBoard()[x][y];
-                        b.getBoard()[x][y] = null;
-                        b.getBoard()[_x][_y].x = _x;
-                        b.getBoard()[_x][_y].y = _y;
-                        b.getBoard()[5][7] = b.getBoard()[7][7];
-                        b.getBoard()[7][7] = null;
-                        b.getBoard()[5][7].x = 5;
-                        b.getBoard()[5][7].y = 7;
-                        b.whiteKingLocX = _x;
-                        b.whiteKingLocY = _y;
-                        moved = true;
-                        return true;
-                    }
-                }
-                else if(!moved && !b.isWhite){
-                    if(_x == 2 && checkCastle(b.getPiece(0,0)) && b.getBoard()[1][0] == null && b.getBoard()[2][0] == null && b.getBoard()[3][0] == null){ //Queen Side
-                        b.getBoard()[_x][_y] = b.getBoard()[x][y];
-                        b.getBoard()[x][y] = null;
-                        b.getBoard()[_x][_y].x = _x;
-                        b.getBoard()[_x][_y].y = _y;
-                        b.getBoard()[3][0] = b.getBoard()[0][0];
-                        b.getBoard()[0][0] = null;
-                        b.getBoard()[3][0].x = 3;
-                        b.getBoard()[3][0].y = 0;
-                        b.blackKingLocX = _x;
-                        b.blackKingLocY = _y;
-                        moved = true;
-                        return true;
-                    }
-                    else if(_x == 6 && checkCastle(b.getPiece(7,0)) && b.getBoard()[5][0] == null && b.getBoard()[6][0] == null) { //King side
-                        b.getBoard()[_x][_y] = b.getBoard()[x][y];
-                        b.getBoard()[x][y] = null;
-                        b.getBoard()[_x][_y].x = _x;
-                        b.getBoard()[_x][_y].y = _y;
-                        b.getBoard()[5][0] = b.getBoard()[7][0];
-                        b.getBoard()[7][0] = null;
-                        b.getBoard()[5][0].x = 5;
-                        b.getBoard()[5][0].y = 0;
-                        b.blackKingLocX = _x;
-                        b.blackKingLocY = _y;
-                        moved = true;
-                        return true;
-                    }
+            } else if (!moved && !b.isWhite) {
+                if (_x == 2 && checkCastle(b.getPiece(0, 0)) && b.getBoard()[1][0] == null && b.getBoard()[2][0] == null && b.getBoard()[3][0] == null) { //Queen Side
+                    castle = true;
+                    return true;
+                } else if (_x == 6 && checkCastle(b.getPiece(7, 0)) && b.getBoard()[5][0] == null && b.getBoard()[6][0] == null) { //King side
+                    castle = true;
+                    return true;
                 }
             }
+        }
         return false;
+    }
+
+    @Override
+    public void move(Board b, int _x, int _y) {
+       if(checkValidMove(b,_x, _y)) {
+           if (b.isWhite) {
+               b.whiteKingLocX = _x;
+               b.whiteKingLocY = _y;
+           } else {
+               b.blackKingLocX = _x;
+               b.blackKingLocY = _y;
+           }
+       }
+        b.getBoard()[_x][_y] = b.getBoard()[x][y];
+        b.getBoard()[x][y] = null;
+        b.getBoard()[_x][_y].x = _x;
+        b.getBoard()[_x][_y].y = _y;
+        moved = true;
+        if (castle) {
+            if (b.isWhite && _x == 2) {
+                b.getBoard()[3][7] = b.getBoard()[0][7];
+                b.getBoard()[0][7] = null;
+                b.getBoard()[3][7].x = 3;
+                b.getBoard()[3][7].y = 7;
+            } else if (b.isWhite && _x == 6) {
+                b.getBoard()[5][7] = b.getBoard()[7][7];
+                b.getBoard()[7][7] = null;
+                b.getBoard()[5][7].x = 5;
+                b.getBoard()[5][7].y = 7;
+            } else if (!b.isWhite && _x == 2) {
+                b.getBoard()[3][0] = b.getBoard()[0][0];
+                b.getBoard()[0][0] = null;
+                b.getBoard()[3][0].x = 3;
+                b.getBoard()[3][0].y = 0;
+            } else if (!b.isWhite && _x == 6) {
+                b.getBoard()[5][0] = b.getBoard()[7][0];
+                b.getBoard()[7][0] = null;
+                b.getBoard()[5][0].x = 5;
+                b.getBoard()[5][0].y = 0;
+            }
+        }
     }
 
     public boolean checkCastle(Piece piece){

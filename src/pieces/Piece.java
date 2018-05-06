@@ -24,9 +24,13 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public abstract boolean move(Board b, int _x, int _y);
+    public abstract boolean checkValidMove(Board b, int _x, int _y);
+
+    public abstract void move(Board b, int _x, int _y);
 
     public abstract boolean check(Board b);
+
+
 
     public boolean isValid(int fromX, int fromY, int toX, int toY) {
         if (toX == fromX && toY == fromY) {

@@ -143,23 +143,21 @@ public class Board {
         try {
             System.out.println("to : " + dx + " " + dy);
             if(!(fx == dx && fy == dy)) {
-                //System.out.println("White: " + whiteKingLocX + "," + whiteKingLocY);
-                //System.out.println("Black: " + blackKingLocX + "," + blackKingLocY);
                 if (isWhite) {
                     if (getPiece(fx, fy).p.isWhite()) {
                         if(getPiece(fx, fy).checkValidMove(this, dx, dy)) {
                             getPiece(fx,fy).move(this, dx, dy);
+                            System.out.println(getPiece(dx,dy).check(this));
                             isWhite = !isWhite;
-                            System.out.println(getPiece(dx, dy).check(this));
-                            System.out.println(blackKingLocX + "," + blackKingLocY);
+
                         }
                     }
                 } else {
                     if (!getPiece(fx, fy).p.isWhite()) {
                         if(getPiece(fx, fy).checkValidMove(this, dx, dy)) {
                             getPiece(fx,fy).move(this, dx, dy);
+                            System.out.println(getPiece(dx,dy).check(this));
                             isWhite = !isWhite;
-                            System.out.println(getPiece(dx, dy).check(this));
                         }
                     }
                 }

@@ -23,59 +23,8 @@ public class Queen extends Piece {
     @Override
     public boolean checkValidMove(Board b, int _x, int _y) {
         if (isValid(x, y, _x, _y) && !sameColor(b, x, y, _x, _y) && !isKing(b, _x, _y)) {
-            inbetween = false;
-            if (x != _x && y == _y) {//horizontal
-                if (x < _x && _x - x >= 2) {
-                    for (int i = x + 1; i < _x; i++) {
-                        if (b.getBoard()[i][y] != null) {
-                            inbetween = true;
-                        }
-                    }
-                } else if (x > _x && x - _x >= 2) {
-                    for (int i = _x + 1; i < x; i++) {
-                        if (b.getBoard()[i][y] != null) {
-                            inbetween = true;
-                        }
-                    }
-                }
-            } else if (y != _y && x == _x) {//vertical
-                if (y < _y && _y - y >= 2) {
-                    for (int i = y + 1; i < _y; i++) {
-                        if (b.getBoard()[x][i] != null) {
-                            inbetween = true;
-                        }
-                    }
-                } else if (y > _y && y - _y >= 2) {
-                    for (int i = _y + 1; i < y; i++) {
-                        if (b.getBoard()[x][i] != null) {
-                            inbetween = true;
-                        }
-                    }
-                }
-            } else if (Math.abs(x - _x) == Math.abs(y - _y)) { //check if moving in diagonal line
-                if (Math.abs(x - _x) >= 2) {
-                    if (_x < x && _y < y) { //top left
-                        for (int i = _x + 1, j = _y + 1; i < x; i++, j++)
-                            if (b.getBoard()[i][j] != null)
-                                inbetween = true;
-                    } else if (_x > x && _y < y) { //top right
-                        for (int i = x + 1, j = y - 1; i < _x; i++, j--)
-                            if (b.getBoard()[i][j] != null)
-                                inbetween = true;
-                    } else if (_x < x && _y > y) { //bottom left
-                        for (int i = _x + 1, j = _y - 1; i < x; i++, j--)
-                            if (b.getBoard()[i][j] != null)
-                                inbetween = true;
-                    } else if (_x > x && _y > y) { //bottom right
-                        for (int i = x + 1, j = y + 1; i < _x; i++, j++)
-                            if (b.getBoard()[i][j] != null)
-                                inbetween = true;
-                    }
-                }
-            }
-            if (!inbetween && (x != _x && y == _y || y != _y && x == _x || Math.abs(x - _x) == Math.abs(y - _y))) {
-                return true;
-            }
+            checkInbetween(b, _x, _y);
+            return (!inbetween && (x != _x && y == _y || y != _y && x == _x || Math.abs(x - _x) == Math.abs(y - _y)));
         }
         return false;
     }
@@ -90,10 +39,68 @@ public class Queen extends Piece {
         }
     }
 
+    private void checkInbetween(Board b, int targetX, int targetY) {
+        inbetween = false;
+        if (x != targetX && y == targetY) {//horizontal
+            if (x < targetX && targetX - x >= 2) {
+                for (int i = x + 1; i < targetX; i++) {
+                    if (b.getPiece(i, y) != null) {
+                        inbetween = true;
+                    }
+                }
+            } else if (x > targetX && x - targetX >= 2) {
+                for (int i = targetX + 1; i < x; i++) {
+                    if (b.getPiece(i, y) != null) {
+                        inbetween = true;
+                    }
+                }
+            }
+        } else if (y != targetY && x == targetX) {//vertical
+            if (y < targetY && targetY - y >= 2) {
+                for (int i = y + 1; i < targetY; i++) {
+                    if (b.getPiece(x, i) != null) {
+                        inbetween = true;
+                    }
+                }
+            } else if (y > targetY && y - targetY >= 2) {
+                for (int i = targetY + 1; i < y; i++) {
+                    if (b.getPiece(x, i) != null) {
+                        inbetween = true;
+                    }
+                }
+            }
+        } else if (Math.abs(x - targetX) == Math.abs(y - targetY)) { //check if moving in diagonal line
+            if (Math.abs(x - targetX) >= 2) {
+                if (targetX < x && targetY < y) { //top left
+                    for (int i = targetX + 1, j = targetY + 1; i < x; i++, j++)
+                        if (b.getPiece(i, j) != null)
+                            inbetween = true;
+                } else if (targetX > x && targetY < y) { //top right
+                    for (int i = x + 1, j = y - 1; i < targetX; i++, j--)
+                        if (b.getPiece(i, j) != null)
+                            inbetween = true;
+                } else if (targetX < x && targetY > y) { //bottom left
+                    for (int i = targetX + 1, j = targetY - 1; i < x; i++, j--)
+                        if (b.getPiece(i, j) != null)
+                            inbetween = true;
+                } else if (targetX > x && targetY > y) { //bottom right
+                    for (int i = x + 1, j = y + 1; i < targetX; i++, j++)
+                        if (b.getPiece(i, j) != null)
+                            inbetween = true;
+                }
+            }
+        }
+        else inbetween = true;
+    }
 
     @Override
     public boolean check(Board b) {
-        return false;
+        if (b.getPiece(x,y).p == b.white)
+            checkInbetween(b, b.blackKingLocX, b.blackKingLocY);
+        else
+            checkInbetween(b, b.whiteKingLocX, b.whiteKingLocY);
+        //*********************************
+        return !inbetween;
     }
 
     @Override

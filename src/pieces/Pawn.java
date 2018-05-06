@@ -30,7 +30,12 @@ public class Pawn extends Piece {
     @Override
     public boolean checkValidMove(Board b, int _x, int _y){
         if (isValid(x, y, _x, _y) && !sameColor(b,x,y,_x,_y) && !isKing(b,_x,_y)) {
-            if ((x == _x && y + movement == _y || !moved && y + 2 * movement == _y) && b.getBoard()[_x][_y] == null) {    //Normal move
+/*
+            if(b.isWhite && b.whiteKingChecked || !b.isWhite && b.blackKingChecked){
+                return false;
+            }
+            */
+            if ((x == _x && (y + movement == _y || !moved && y + 2 * movement == _y)) && b.getBoard()[_x][_y] == null) {    //Normal move
                 return true;
             }
             else if (p.isWhite() && Math.abs(x - _x) == 1 && (y - _y) == 1 && b.getBoard()[_x][_y] != null) {   //White Pawn Capture
@@ -63,11 +68,11 @@ public class Pawn extends Piece {
     @Override
     public boolean check(Board b) {
         if(b.getPiece(x,y).p == b.white && b.blackKingLocY == y - 1 && (x - 1 == b.blackKingLocX || x + 1 == b.blackKingLocX)){
-            b.blackKingChecked = true;
+            //b.blackKingChecked = true;
             return true;
         }
         else if(b.getPiece(x,y).p == b.black && b.whiteKingLocY == y + 1 && (x - 1 == b.whiteKingLocX || x + 1 == b.whiteKingLocX)){
-            b.whiteKingChecked = true;
+            //b.whiteKingChecked = true;
             return true;
         }
         else{

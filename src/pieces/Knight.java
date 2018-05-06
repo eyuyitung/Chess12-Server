@@ -39,7 +39,11 @@ public class Knight extends Piece {
 
     @Override
     public boolean check(Board b) {
-        return false;
+        if (b.getPiece(x,y).p == b.white){
+            return (Math.abs(x - b.blackKingLocX) + Math.abs(y - b.blackKingLocY)) == 3 && Math.abs(x - b.blackKingLocX) == 2 * Math.abs(y - b.blackKingLocY) || 2 * Math.abs(x - b.blackKingLocX) == Math.abs(y - b.blackKingLocY);
+        }
+        else
+            return (Math.abs(x - b.whiteKingLocX) + Math.abs(y - b.whiteKingLocY)) == 3 && Math.abs(x - b.whiteKingLocX) == 2 * Math.abs(y - b.whiteKingLocY) || 2 * Math.abs(x - b.whiteKingLocX) == Math.abs(y - b.whiteKingLocY);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class Handler {
                 int _x = Integer.parseInt(s.nextLine());
                 int _y = Integer.parseInt(s.nextLine());
                 if (CurrentPlayer == board.getPiece(x, y).p.white && board.getPiece(x, y).checkValidMove(board, _x, _y)) {
-                    board.getPiece(x, y).move(board, _x, _y);
+                    board.getPiece(x, y).move(board, _x, _y, board.capturedPiece);
                     CurrentPlayer = !CurrentPlayer;
                 }
                 board.display();

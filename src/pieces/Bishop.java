@@ -20,8 +20,12 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public void move(Board b, int _x, int _y){
+    public void move(Board b, int _x, int _y, Piece piece){
+        Piece tmp = null;
         if (checkValidMove(b, _x, _y)) {
+
+            piece = b.getPiece(_x,_y);  //*********
+
             b.getBoard()[_x][_y] = b.getBoard()[x][y];
             b.getBoard()[x][y] = null;
             x = _x;

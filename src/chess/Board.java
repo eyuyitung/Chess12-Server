@@ -21,16 +21,16 @@ public class Board {
     public Player white;
     public Player black;
 
-    int fx = -1, fy = -1;// mouse coordinate values
-    int dx = -1, dy = -1;
+    private int fx = -1, fy = -1;// mouse coordinate values
+    private int dx = -1, dy = -1;
     private int width = 800;
     private int height = 800;
-    int xb = width / 10;
-    int yb = height / 10;
+    private int xb = width / 10;
+    private int yb = height / 10;
     long tClick;
     long time = 0;
-    JFrame frame = new JFrame("Chess");
-    Drawing drawing = new Drawing();
+    private JFrame frame = new JFrame("Chess");
+    private Drawing drawing = new Drawing();
     public boolean isWhite = true;
     public int whiteKingLocX;
     public int whiteKingLocY;
@@ -38,6 +38,8 @@ public class Board {
     public int blackKingLocY;
     public boolean whiteKingChecked;
     public boolean blackKingChecked;
+
+    public Piece capturedPiece = null;
 
     public Board(Player white, Player black) {
         this.white = white;
@@ -138,31 +140,32 @@ public class Board {
         }
     }
 
+
     public void mouseMove() {
 
         try {
             System.out.println("to : " + dx + " " + dy);
-            if(!(fx == dx && fy == dy)) {
+            if (!(fx == dx && fy == dy)) {
                 if (isWhite) {
                     if (getPiece(fx, fy).p.isWhite()) {
-                        if(getPiece(fx, fy).checkValidMove(this, dx, dy)) {
-                            getPiece(fx,fy).move(this, dx, dy);
-                            System.out.println(getPiece(dx,dy).check(this));
+                        if (getPiece(fx, fy).checkValidMove(this, dx, dy)) {
+                            getPiece(fx, fy).move(this, dx, dy, capturedPiece);
+                            System.out.println(getPiece(dx, dy).check(this));
                             isWhite = !isWhite;
 
                         }
                     }
                 } else {
                     if (!getPiece(fx, fy).p.isWhite()) {
-                        if(getPiece(fx, fy).checkValidMove(this, dx, dy)) {
-                            getPiece(fx,fy).move(this, dx, dy);
-                            System.out.println(getPiece(dx,dy).check(this));
+                        if (getPiece(fx, fy).checkValidMove(this, dx, dy)) {
+                            getPiece(fx, fy).move(this, dx, dy, capturedPiece);
+                            System.out.println(getPiece(dx, dy).check(this));
                             isWhite = !isWhite;
                         }
                     }
                 }
             }
-        } catch ( Exception e) {
+        } catch (Exception e) {
             System.out.println("Invalid move");
         }
     }

@@ -41,7 +41,7 @@ public class King extends Piece {
     }
 
     @Override
-    public void move(Board b, int _x, int _y) {
+    public void move(Board b, int _x, int _y, Piece piece) {
        if(checkValidMove(b,_x, _y)) {
            if (b.isWhite) {
                b.whiteKingLocX = _x;
@@ -51,6 +51,9 @@ public class King extends Piece {
                b.blackKingLocY = _y;
            }
        }
+
+        piece = b.getPiece(_x,_y);  //*********
+
         b.getBoard()[_x][_y] = b.getBoard()[x][y];
         b.getBoard()[x][y] = null;
         b.getBoard()[_x][_y].x = _x;

@@ -26,7 +26,7 @@ public abstract class Piece {
 
     public abstract boolean checkValidMove(Board b, int _x, int _y);
 
-    public abstract void move(Board b, int _x, int _y);
+    public abstract void move(Board b, int _x, int _y, Piece piece);
 
     public abstract boolean check(Board b);
 

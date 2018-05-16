@@ -21,14 +21,11 @@ public class Board {
     public Player white;
     public Player black;
 
-    private int fx = -1, fy = -1;// mouse coordinate values
-    private int dx = -1, dy = -1;
     private int width = 800;
     private int height = 800;
     private int xb = width / 10;
     private int yb = height / 10;
-    long tClick;
-    long time = 0;
+    private boolean first = true;
     private JFrame frame = new JFrame("Chess");
     private Drawing drawing = new Drawing();
     public boolean isWhite = true;
@@ -36,8 +33,7 @@ public class Board {
     public int whiteKingLocY;
     public int blackKingLocX;
     public int blackKingLocY;
-    public boolean whiteKingChecked;
-    public boolean blackKingChecked;
+
 
     public Piece capturedPiece = null;
 
@@ -83,8 +79,7 @@ public class Board {
         whiteKingLocY = 7;
         blackKingLocX = 4;
         blackKingLocY = 0;
-        whiteKingChecked = false;
-        blackKingChecked = false;
+
     }
 
     public void display() {
@@ -110,9 +105,20 @@ public class Board {
     }
 
     class MouseListen extends MouseAdapter {
+        private int fx = -1, fy = -1;// mouse coordinate values
+        private int dx = -1, dy = -1;
+        public int cx, cy, px, py, rx, ry;
+
+        public void mouseClicked(MouseEvent e) {
+            System.out.println("click");
+            cx = e.getX();
+            cy = e.getY();
+        }
+
         public void mousePressed(MouseEvent e) {
-            int x = e.getX();
-            int y = e.getY();
+            px = e.getX();
+            py = e.getY();
+            /*
             if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
                 fx = (x - 3) / xb - 1;
                 fy = (y - 25) / yb - 1;
@@ -122,54 +128,115 @@ public class Board {
                     fx = fy = -1;
             } else {
                 fx = fy = -1;
-            }
+            }*/
         }
 
         public void mouseReleased(MouseEvent e) {
-            int x = e.getX();
-            int y = e.getY();
+            rx = e.getX();
+            ry = e.getY();
+            if (px == rx && py == ry) { // click
+                moveHandler(cx, cy);
+            } else {
+                moveHandler(px, py);
+                moveHandler(rx, ry);
+            }
+            drawing.repaint();
+                /*
             if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
                 dx = (x - 3) / xb - 1;
                 dy = (y - 25) / yb - 1;
-                System.out.println("To : " + dx + " " + dy);
-                mouseMove();
+                mouseMove(fx, fy, dx, dy);
                 drawing.repaint();
             } else {
                 fx = fy = dx = dy = -1;
+            }*/
+        }
+
+        public void moveHandler(int x, int y) {
+            if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
+                if (first) {
+                    System.out.println("click 1");
+                    fx = (x - 3) / xb - 1;
+                    fy = (y - 25) / yb - 1;
+                    if (board[fx][fy] != null) {
+                        System.out.println("From : " + fx + " " + fy);
+                        first = false;
+                    } else
+                        fx = fy = -1;
+                } else {
+                    System.out.println("click 2");
+                    dx = (x - 3) / xb - 1;
+                    dy = (y - 25) / yb - 1;
+                    mouseMove(fx, fy, dx, dy);
+                    drawing.repaint();
+                    first = true;
+                }
+
             }
         }
     }
 
 
-    public void mouseMove() {
+    public void mouseMove(int x, int y, int _x, int _y) {
 
         try {
-            System.out.println("to : " + dx + " " + dy);
-            if (!(fx == dx && fy == dy)) {
-                if (isWhite) {
-                    if (getPiece(fx, fy).p.isWhite()) {
-                        if (getPiece(fx, fy).checkValidMove(this, dx, dy)) {
-                            getPiece(fx, fy).move(this, dx, dy, capturedPiece);
-                            System.out.println(getPiece(dx, dy).check(this));
-                            isWhite = !isWhite;
 
+            if (!(x == _x && y == _y)) {
+                if (isWhite) {
+                    if (getPiece(x, y).p.isWhite()) {
+                        if (getPiece(x, y).checkValidMove(this, _x, _y)) {
+                            getPiece(x, y).move(this, _x, _y, capturedPiece);
+                            System.out.println("white checking black " + getPiece(_x, _y).check(this));
+                            if (checkCheck())
+                                getPiece(_x, _y).move(this, x, y, capturedPiece);
+                            else {
+                                isWhite = !isWhite;
+                                System.out.println("white turn complete");
+                            }
                         }
                     }
                 } else {
-                    if (!getPiece(fx, fy).p.isWhite()) {
-                        if (getPiece(fx, fy).checkValidMove(this, dx, dy)) {
-                            getPiece(fx, fy).move(this, dx, dy, capturedPiece);
-                            System.out.println(getPiece(dx, dy).check(this));
-                            isWhite = !isWhite;
+                    if (!getPiece(x, y).p.isWhite()) {
+                        if (getPiece(x, y).checkValidMove(this, _x, _y)) {
+                            getPiece(x, y).move(this, _x, _y, capturedPiece);
+                            System.out.println("black checking white " + getPiece(_x, _y).check(this));
+                            if (checkCheck())
+                                getPiece(_x, _y).move(this, x, y, capturedPiece);
+                            else {
+                                isWhite = !isWhite;
+                                System.out.println("black turn complete");
+                            }
                         }
                     }
                 }
+                System.out.println(checkCheck());
+                System.out.println("To : " + _x + " " + _y);
             }
         } catch (Exception e) {
             System.out.println("Invalid move");
         }
     }
 
+    public boolean checkCheck() {  //returns true if in check
+        boolean tmp = false;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (isWhite) {
+                    if (getPiece(j, i) != null && !getPiece(j, i).p.isWhite()) {
+                        if (getPiece(j, i).check(this)) {
+                            tmp = true;
+                        }
+                    }
+                } else {
+                    if (getPiece(j, i) != null && getPiece(j, i).p.isWhite()) {
+                        if (getPiece(j, i).check(this))
+                            tmp = true;
+                    }
+                }
+            }
+        }
+        return tmp;
+    }
 
     class Drawing extends JComponent {
         public Drawing() {
@@ -216,6 +283,10 @@ public class Board {
                 g.drawString(Integer.toString(ly++), xb - 10, row + 30);
             for (int col = xb; col < xb * 9; col += xb)
                 g.drawString(Integer.toString(lx++), col + 30, yb - 10);
+            if (isWhite)
+                g.drawString("White", xb, yb);
+            else
+                g.drawString("Black", xb, yb);
         }
     }
 }

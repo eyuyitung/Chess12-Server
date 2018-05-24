@@ -3,7 +3,9 @@ package chess;
 
 import java.io.IOException;
 import java.util.Scanner;
-
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class Handler {
 
@@ -11,6 +13,11 @@ public class Handler {
     Player black;
 
     Board board;
+    boolean clicked = false;
+    private int width = 1200;
+    private int height = 800;
+    JFrame frame = new JFrame("Chess");
+    Drawing drawing = new Drawing();
 
     Scanner s = new Scanner(System.in);
 
@@ -52,4 +59,66 @@ public class Handler {
 
     }
 
+    public void menu(){
+        frame.setSize(width, height);
+        frame.getContentPane().add(drawing);
+        frame.addMouseListener(new MouseListen());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+
+    }
+
+    public void menuDisplay(){
+        frame.setVisible(true);
+    }
+
+    public void clickStarted(){}
+
+    class MouseListen extends MouseAdapter {
+        private int fx = -1, fy = -1;// mouse coordinate values
+        private int dx = -1, dy = -1;
+        public int cx, cy, px, py, rx, ry;
+
+        public void mouseClicked(MouseEvent e) {
+            cx = e.getX();
+            cy = e.getY();
+            System.out.println("hey");
+            clicked = true;
+        }
+
+        public void mousePressed(MouseEvent e) {
+            px = e.getX();
+            py = e.getY();
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            rx = e.getX();
+            ry = e.getY();
+
+        }
+
+        public void moveHandler(int x, int y) { }
+        }
+
+
+    class Drawing extends JComponent {
+        public Drawing() {
+            repaint();
+        }
+
+        public void paint(Graphics g) {
+            String localDir = System.getProperty("user.dir");
+            ImageIcon bg = new ImageIcon(localDir + "\\bg.jpg");
+
+            Image image = bg.getImage();
+            Image newimg = image.getScaledInstance(1200, 800, java.awt.Image.SCALE_SMOOTH);
+            ImageIcon sBg = new ImageIcon(newimg);
+
+            sBg.paintIcon(this, g, 0,0);
+
+            //System.out.println(localDir);
+        }
+    }
 }
+
+

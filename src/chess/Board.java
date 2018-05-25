@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+//xd
 
 public class Board {
 
@@ -40,13 +41,14 @@ public class Board {
     public Board(Player white, Player black) {
         this.white = white;
         this.black = black;
-        initFrame();
+        //initFrame();
         initializePieces();
     }
 
     public void initFrame() {
         frame.setSize(width, height);
         frame.getContentPane().add(drawing);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addMouseListener(new MouseListen());
         frame.setResizable(false);
         frame.setVisible(true);
@@ -93,6 +95,7 @@ public class Board {
             }
             System.out.println();
         }
+        initFrame();
         // drawing.repaint();
     }
 

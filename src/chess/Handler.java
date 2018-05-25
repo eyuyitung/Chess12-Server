@@ -75,6 +75,7 @@ public class Handler {
     }
 
     public void menuDisplay(){
+        if(!frame.isShowing())
         frame.setVisible(true);
     }
 
@@ -111,8 +112,8 @@ public class Handler {
             }
 
             else if (clickPlay && !clickOptions && 55 < rx && rx < 305 && 575 < ry && ry < 675 && clickTimed == 0) { //click on TIMED
-                    clickTimed = 2;
-                    System.out.println("time mode = 2");
+                clickTimed = 2;
+                System.out.println("time mode = 2");
             }
 
             else if (clickPlay && !clickOptions && clickTimed != 0 && 55 < rx && rx < 305 && 475 < ry && ry < 575){
@@ -141,6 +142,7 @@ public class Handler {
                     clickTimed = 0;
                 System.out.println("u clicked back");
             }
+
         }
     }
 

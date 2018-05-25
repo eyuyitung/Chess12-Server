@@ -18,16 +18,17 @@ public class Chess {
 
 
         while (true) {
-            if(screen==1) {
+            if(screen == 1) {
                 h.menuDisplay();
             }
+
             else if (screen == 2) {
                 h.frame.setVisible(false);
                 h.frame.dispose();
                 h.run(); //change to game loop later
                 h.close(); //closes all the ports
             }
-            if(h.clicked)
+            if(h.clickPlayLocal)
                 screen = 2;
             h.drawing.repaint();
         }

@@ -37,12 +37,11 @@ public class Handler {
         board.display();
         board.initFrame();
         Music.volume = Music.Volume.LOW;
-        Music.MII.play();
-        if (false) { //SPEED CHESS MUSIC
+        if (clickTimed != 0) { //SPEED CHESS MUSIC
             Music.MII.stop();
             Music.SONIC.play();
-
-        }
+        } else
+            Music.MII.play();
     }
 
     public void close() { //close ports for networking

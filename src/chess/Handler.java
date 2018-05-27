@@ -13,13 +13,15 @@ public class Handler {
     Board board;
 
     int clickTimed = 0;
+    int vol = 1;
+    int turnLength = 0;
     boolean clickPlayLocal = false;
     boolean clickPlayLan = false;
     boolean clickPlay = false;
     boolean clickOptions = false;
     private int width = 1200;
     private int height = 800;
-    private ImageIcon sBg, sPB, sOB, sBB, sNB, sTB, sLOB, sLAB, sGc;
+    private ImageIcon sBg, sPB, sOB, sBB, sNB, sTB, sLOB, sLAB, sGc, sMuteB, sLowB, sMediumB, sHighB, sFiveB, sTenB;
     JFrame frame = new JFrame("Chess");
     Drawing drawing = new Drawing();
 
@@ -36,7 +38,14 @@ public class Handler {
 
     public void run() { //change to tick / render
         board.display();
-        Music.volume = Music.Volume.LOW;
+        if(vol == 0)
+            Music.volume = Music.Volume.MUTE;
+        else if(vol == 1)
+            Music.volume = Music.Volume.LOW;
+        else if(vol == 2)
+            Music.volume = Music.Volume.MEDIUM;
+        else if(vol == 3)
+            Music.volume = Music.Volume.HIGH;
         if (clickTimed > 1) { //SPEED CHESS MUSIC
             Music.MII.stop();
             Music.SONIC.play();
@@ -85,12 +94,22 @@ public class Handler {
                 System.out.println("time mode = 2");
             }
 
-            else if (clickPlay && !clickOptions && clickTimed != 0 && 55 < rx && rx < 305 && 475 < ry && ry < 575){
+            else if(clickPlay && !clickOptions && 55 < rx && rx < 305 && 475 < ry && ry < 575 && clickTimed == 2 && turnLength == 0) { //clicked on 5min
+                turnLength = 5;
+                System.out.println("turn length = 5min");
+            }
+
+            else if(clickPlay && !clickOptions  && 55 < rx && rx < 305 && 575 < ry && ry < 675 && clickTimed == 2 && turnLength == 0){// clicked on 10min
+                turnLength = 10;
+                System.out.println("turn length= 10min");
+            }
+
+            else if ((clickPlay && !clickOptions && clickTimed == 1 && 55 < rx && rx < 305 && 475 < ry && ry < 575) || (clickPlay && !clickOptions && clickTimed == 2 && turnLength!= 0 && 55 < rx && rx < 305 && 475 < ry && ry < 575)){  //clicked on local
                 clickPlayLocal = true;
                 System.out.println("play mode = local");
             }
 
-            else if (clickPlay && !clickOptions && clickTimed != 0 && 55 < rx && rx < 305 && 575 < ry && ry < 675){
+            else if (clickPlay && !clickOptions && clickTimed != 0 && 55 < rx && rx < 305 && 575 < ry && ry < 675){ //clicked on Lan
                 clickPlayLan = true;
                 System.out.println("play mode = lan");
                 String C = JOptionPane.showInputDialog("Please enter server computer name");
@@ -102,13 +121,36 @@ public class Handler {
                 System.out.println("u clicked options");
             }
 
+            else if(!clickPlay && clickOptions && 48 < rx && rx < 168 && 481< ry&& ry < 541){ // clicked on mute
+                vol = 0;
+                System.out.println("u click mute");
+            }
+
+            else if(!clickPlay && clickOptions && 208 < rx && rx < 328 && 481< ry&& ry < 541){ // clicked on low
+                vol = 1;
+                System.out.println("u click low");
+            }
+
+            else if(!clickPlay && clickOptions && 368 < rx && rx < 488 && 481< ry&& ry < 541){ // clicked on medium
+                vol = 2;
+                System.out.println("u click medium");
+            }
+
+            else if(!clickPlay && clickOptions && 528 < rx && rx < 648 && 481< ry&& ry < 541){ // clicked on high
+                vol = 3;
+                System.out.println("u click high");
+            }
+
+
             else if((clickPlay || (!clickPlay && clickOptions)) && 18 < rx && rx < 168 && 730 <= ry && ry < 795){  // clicked on back
                 if(clickOptions)
                     clickOptions = false;
                 if(clickTimed == 0)
                     clickPlay = false;
-                else if(clickTimed != 0)
+                else if(clickTimed != 0 && turnLength == 0)
                     clickTimed = 0;
+                else if(clickTimed == 2 && turnLength != 0)
+                    turnLength = 0;
                 System.out.println("u clicked back");
             }
 
@@ -127,11 +169,20 @@ public class Handler {
             ImageIcon gc = new ImageIcon(localDir + "\\GIGACHESS.png");
             ImageIcon playB = new ImageIcon(localDir + "\\playB.png");
             ImageIcon optionsB = new ImageIcon(localDir + "\\optionsB.png");
+                ImageIcon muteB = new ImageIcon(localDir + "\\muteB.png");
+                ImageIcon lowB = new ImageIcon(localDir + "\\lowB.png");
+                ImageIcon mediumB = new ImageIcon(localDir + "\\mediumB.png");
+                ImageIcon highB = new ImageIcon(localDir + "\\highB.png");
+
             ImageIcon backB = new ImageIcon(localDir + "\\backB.png");
             ImageIcon normalB = new ImageIcon(localDir + "\\normalB.png");
             ImageIcon timedB = new ImageIcon(localDir + "\\timedB.png");
+                ImageIcon fiveB = new ImageIcon(localDir + "\\fiveMinB.png");
+                ImageIcon tenB = new ImageIcon(localDir + "\\tenMinB.png");
+
             ImageIcon localB = new ImageIcon(localDir + "\\localB.png");
             ImageIcon lanB = new ImageIcon(localDir + "\\lanB.png");
+
 
 
 
@@ -143,7 +194,6 @@ public class Handler {
             Image newGc = gigaChess.getScaledInstance(700, 300, Image.SCALE_SMOOTH);
             sGc = new ImageIcon(newGc);
 
-
             Image playButton = playB.getImage();//play button
             Image newPB = playButton.getScaledInstance(250, 100, Image.SCALE_SMOOTH);
             sPB = new ImageIcon(newPB);
@@ -152,6 +202,24 @@ public class Handler {
             Image newOB = optionsButton.getScaledInstance(250, 100, Image.SCALE_SMOOTH);
             sOB = new ImageIcon(newOB);
 
+                Image muteButton = muteB.getImage();//mute button
+                Image newMuteB = muteButton.getScaledInstance(120, 60, Image.SCALE_SMOOTH);
+                sMuteB = new ImageIcon(newMuteB);
+
+                Image lowButton = lowB.getImage();//low button
+                Image newLowB = lowButton.getScaledInstance(120, 60, Image.SCALE_SMOOTH);
+                sLowB = new ImageIcon(newLowB);
+
+                Image mediumButton = mediumB.getImage();//medium button
+                Image newMediumB = mediumButton.getScaledInstance(120, 60, Image.SCALE_SMOOTH);
+                sMediumB = new ImageIcon(newMediumB);
+
+                Image highButton = highB.getImage();//high button
+                Image newHighB = highButton.getScaledInstance(120, 60, Image.SCALE_SMOOTH);
+                sHighB = new ImageIcon(newHighB);
+
+
+
             Image normalButton = normalB.getImage();//normal button
             Image newNB = normalButton.getScaledInstance(250, 100, Image.SCALE_SMOOTH);
             sNB = new ImageIcon(newNB);
@@ -159,6 +227,15 @@ public class Handler {
             Image timedButton = timedB.getImage();//timed button
             Image newTB = timedButton.getScaledInstance(250, 100, Image.SCALE_SMOOTH);
             sTB = new ImageIcon(newTB);
+
+                Image fiveButton = fiveB.getImage();//normal button
+                Image newFiveB = fiveButton.getScaledInstance(250, 100, Image.SCALE_SMOOTH);
+                sFiveB = new ImageIcon(newFiveB);
+
+                Image tenButton = tenB.getImage();//normal button
+                Image newTenB = tenButton.getScaledInstance(250, 100, Image.SCALE_SMOOTH);
+                sTenB = new ImageIcon(newTenB);
+
 
             Image localButton = localB.getImage();//local button
             Image newLOB = localButton.getScaledInstance(250, 100, Image.SCALE_SMOOTH);
@@ -182,12 +259,25 @@ public class Handler {
                 sOB.paintIcon(this, g, 55, 550);
             }
 
+            if(!clickPlay && clickOptions){ //displaying volume buttons
+                sMuteB.paintIcon(this, g, 40, 450);
+                sLowB.paintIcon(this, g, 200, 450);
+                sMediumB.paintIcon(this, g, 360, 450);
+                sHighB.paintIcon(this, g, 520, 450);
+            }
+
+
             if(clickPlay && !clickOptions && clickTimed == 0){  //displaying normal and timed
                 sNB.paintIcon(this, g, 55, 450);
                 sTB.paintIcon(this, g, 55, 550);
             }
 
-            if(clickPlay && !clickOptions && clickTimed != 0){
+            if(clickPlay && !clickOptions && clickTimed == 2 && turnLength == 0){ //displaying time selections
+                sFiveB.paintIcon(this, g, 55, 450);
+                sTenB.paintIcon(this, g, 55, 550);
+            }
+
+            if( (clickPlay && !clickOptions && clickTimed == 1 )|| (clickPlay && !clickOptions && clickTimed == 2 && turnLength != 0)){ //displaying Local/ LAN
                 sLOB.paintIcon(this, g, 55, 450);
                 sLAB.paintIcon(this, g, 55, 550);
             }

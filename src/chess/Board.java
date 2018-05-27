@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-//xd
 
 public class Board {
 
@@ -22,11 +21,12 @@ public class Board {
     public Player white;
     public Player black;
 
+    int fx = -1, fy = -1;// mouse coordinate values
     private int width = 800;
     private int height = 800;
     private int xb = width / 10;
     private int yb = height / 10;
-    private boolean first = true;
+
     private JFrame frame = new JFrame("Chess");
     private Drawing drawing = new Drawing();
     public boolean isWhite = true;
@@ -35,6 +35,9 @@ public class Board {
     public int blackKingLocX;
     public int blackKingLocY;
 
+    public boolean whiteKingChecked;
+    public boolean blackKingChecked;
+    boolean first = true;
 
     public Piece capturedPiece = null;
 
@@ -52,6 +55,7 @@ public class Board {
         frame.addMouseListener(new MouseListen());
         frame.setResizable(false);
         frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void initializePieces() {
@@ -85,7 +89,7 @@ public class Board {
     }
 
     public void display() {
-        for (int i = 0; i < 8; i++) {
+      /*  for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (board[j][i] != null) {
                     System.out.print(board[j][i]);
@@ -94,9 +98,8 @@ public class Board {
                 }
             }
             System.out.println();
-        }
+        }*/
         initFrame();
-        // drawing.repaint();
     }
 
     public Piece[][] getBoard() {
@@ -108,73 +111,54 @@ public class Board {
     }
 
     class MouseListen extends MouseAdapter {
-        private int fx = -1, fy = -1;// mouse coordinate values
-        private int dx = -1, dy = -1;
-        public int cx, cy, px, py, rx, ry;
 
-        public void mouseClicked(MouseEvent e) {
-            System.out.println("click");
-            cx = e.getX();
-            cy = e.getY();
-        }
+        int px, py;
+        int ix = -1;
+        int iy = -1;
 
+        int dx = -1, dy = -1;
+
+        @Override
         public void mousePressed(MouseEvent e) {
             px = e.getX();
             py = e.getY();
-            /*
-            if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
-                fx = (x - 3) / xb - 1;
-                fy = (y - 25) / yb - 1;
-                if (board[fx][fy] != null) {
+            if (px >= xb && px <= xb * 9 && py >= yb && py <= yb * 9) {
+                fx = (px - 3) / xb - 1;
+                fy = (py - 25) / yb - 1;
+                if (board[fx][fy] != null || !first) {
                     System.out.println("From : " + fx + " " + fy);
                 } else
                     fx = fy = -1;
             } else {
                 fx = fy = -1;
-            }*/
+            }
+            System.out.println("lol");
+            drawing.repaint();
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
-            rx = e.getX();
-            ry = e.getY();
-            if (px == rx && py == ry) { // click
-                moveHandler(cx, cy);
-            } else {
-                moveHandler(px, py);
-                moveHandler(rx, ry);
-            }
-            drawing.repaint();
-                /*
+            int x = e.getX();
+            int y = e.getY();
             if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
                 dx = (x - 3) / xb - 1;
                 dy = (y - 25) / yb - 1;
-                mouseMove(fx, fy, dx, dy);
-                drawing.repaint();
+
+                if (!(fx == dx && fy == dy)) { // drag movement
+                    mouseMove(fx, fy, dx, dy);
+                    first = true;
+                } else { // click movement
+                    if (first)  {
+                        ix = fx;
+                        iy = fy;
+                        first = false;
+                    } else {
+                        mouseMove(ix, iy, dx, dy);
+                        first = true;
+                    }
+                }
             } else {
                 fx = fy = dx = dy = -1;
-            }*/
-        }
-
-        public void moveHandler(int x, int y) {
-            if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
-                if (first) {
-                    System.out.println("click 1");
-                    fx = (x - 3) / xb - 1;
-                    fy = (y - 25) / yb - 1;
-                    if (board[fx][fy] != null) {
-                        System.out.println("From : " + fx + " " + fy);
-                        first = false;
-                    } else
-                        fx = fy = -1;
-                } else {
-                    System.out.println("click 2");
-                    dx = (x - 3) / xb - 1;
-                    dy = (y - 25) / yb - 1;
-                    mouseMove(fx, fy, dx, dy);
-                    drawing.repaint();
-                    first = true;
-                }
-
             }
         }
     }
@@ -183,41 +167,31 @@ public class Board {
     public void mouseMove(int x, int y, int _x, int _y) {
 
         try {
-
             if (!(x == _x && y == _y)) {
                 if (isWhite) {
                     if (getPiece(x, y).p.isWhite()) {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
-                            System.out.println("white checking black " + getPiece(_x, _y).check(this));
-                            if (checkCheck())
-                                getPiece(_x, _y).move(this, x, y, capturedPiece);
-                            else {
-                                isWhite = !isWhite;
-                                System.out.println("white turn complete");
-                            }
+                            System.out.println("white check black "+getPiece(_x, _y).check(this));
+                            isWhite = !isWhite;
                         }
                     }
+
                 } else {
                     if (!getPiece(x, y).p.isWhite()) {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
-                            System.out.println("black checking white " + getPiece(_x, _y).check(this));
-                            if (checkCheck())
-                                getPiece(_x, _y).move(this, x, y, capturedPiece);
-                            else {
-                                isWhite = !isWhite;
-                                System.out.println("black turn complete");
-                            }
+                            System.out.println("black check white "+ getPiece(_x, _y).check(this));
+                            isWhite = !isWhite;
                         }
                     }
                 }
-                System.out.println(checkCheck());
                 System.out.println("To : " + _x + " " + _y);
             }
         } catch (Exception e) {
             System.out.println("Invalid move");
         }
+        drawing.repaint();
     }
 
     public boolean checkCheck() {  //returns true if in check
@@ -249,7 +223,7 @@ public class Board {
         public void paint(Graphics g) {
             int arcSize = 10;
             char c;
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 8; i++) { // drawing board squares
                 for (int j = 0; j < 8; j++) {
                     if (i % 2 == 0) { // white top left
                         if (j % 2 != 0) {
@@ -262,10 +236,22 @@ public class Board {
                     }
                 }
             }
-            g.setColor(Color.black);
-            g.drawRect(xb, yb, xb * 8, yb * 8);
+            for (int i = 0; i < 8; i++) { // drawing highlighted square of selected piece
+                for (int j = 0; j < 8; j++) {
+                    if (i == fx && j == fy) { // bad workaround for square remaining highlighted after turn
+                        if (board[fx][fy] != null && board[fx][fy].p.isWhite() && isWhite && first) {
+                            g.setColor(Color.decode("#ff0000"));
+                            g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
+                        } else if (board[fx][fy] != null && !board[fx][fy].p.isWhite() && !isWhite && first) {
+                            g.setColor(Color.decode("#ff0000"));
+                            g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
+                        }
+                    }
+                }
+            }
 
-            for (int i = 0; i < 8; i++) {
+
+            for (int i = 0; i < 8; i++) {// drawing pieces
                 for (int j = 0; j < 8; j++) {
                     if (board[j][i] != null) {
                         if (board[j][i].p.isWhite())
@@ -279,12 +265,17 @@ public class Board {
                     }
                 }
             }
+            g.setColor(Color.black); // drawing board border
             g.drawRect(xb, yb, xb * 8, yb * 8);
             int ly = 0;
             int lx = 0;
-            for (int row = yb; row < yb * 9; row += yb)
+            for (
+                    int row = yb;
+                    row < yb * 9; row += yb)
                 g.drawString(Integer.toString(ly++), xb - 10, row + 30);
-            for (int col = xb; col < xb * 9; col += xb)
+            for (
+                    int col = xb;
+                    col < xb * 9; col += xb)
                 g.drawString(Integer.toString(lx++), col + 30, yb - 10);
             if (isWhite)
                 g.drawString("White", xb, yb);

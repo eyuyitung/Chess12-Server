@@ -31,13 +31,13 @@ public class Handler {
         white = new Player(true);
         black = new Player(false);
         board = new Board(white, black);
+        System.out.println("LOL");
     }
 
     public void run() { //change to tick / render
         board.display();
-        board.initFrame();
         Music.volume = Music.Volume.LOW;
-        if (clickTimed != 0) { //SPEED CHESS MUSIC
+        if (clickTimed > 1) { //SPEED CHESS MUSIC
             Music.MII.stop();
             Music.SONIC.play();
         } else
@@ -62,21 +62,8 @@ public class Handler {
     }
 
     class MouseListen extends MouseAdapter {
-        private int fx = -1, fy = -1;// mouse coordinate values
-        private int dx = -1, dy = -1;
-        public int cx, cy, px, py, rx, ry;
 
-        public void mouseClicked(MouseEvent e) {
-            cx = e.getX();
-            cy = e.getY();
-            System.out.println("hey");
-
-        }
-
-        public void mousePressed(MouseEvent e) {
-            px = e.getX();
-            py = e.getY();
-        }
+        int rx, ry;
 
         public void mouseReleased(MouseEvent e) {
             rx = e.getX();

@@ -31,7 +31,7 @@ public class Board {
     private long bStartTime, bEndTime, wEndTime;
     private double duration;
 
-    int fx = -1, fy = -1;// mouse coordinate values
+    public int fx = -1, fy = -1;// mouse coordinate values
     private int width = 800;
     private int height = 800;
     private int xb = width / 10;
@@ -133,7 +133,6 @@ public class Board {
 
     class MouseListen extends MouseAdapter {
 
-        int px, py;
         int ix = -1;
         int iy = -1;
 
@@ -141,11 +140,11 @@ public class Board {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            px = e.getX();
-            py = e.getY();
-            if (px >= xb && px <= xb * 9 && py >= yb && py <= yb * 9) {
-                fx = (px - 3) / xb - 1;
-                fy = (py - 25) / yb - 1;
+            int x = e.getX();
+            int y = e.getY();
+            if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
+                fx = (x - 3) / xb - 1;
+                fy = (y - 25) / yb - 1;
                 if (board[fx][fy] != null || !first) {
                     System.out.println("From : " + fx + " " + fy);
                 } else
@@ -291,7 +290,7 @@ public class Board {
                         g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
                     }
                 }
-            }
+            }/*
             for (int i = 0; i < 8; i++) { // drawing highlighted square of selected piece
                 for (int j = 0; j < 8; j++) {
                     if (i == fx && j == fy) { // bad workaround for square remaining highlighted after turn
@@ -304,17 +303,22 @@ public class Board {
                         }
                     }
                 }
-            }
+            }*/
 
 
             for (int i = 0; i < 8; i++) {// drawing pieces
                 for (int j = 0; j < 8; j++) {
-                    if (board[j][i] != null) {
-                        if (board[j][i].p.isWhite())
+                    Piece cPiece = board[j][i];
+                    if (cPiece != null) {
+                        if (cPiece.selected(Board.this)){
+                            g.setColor(Color.decode("#ff8c00"));
+                            g.fillRoundRect(xb + j * (xb), yb + i * (yb), xb, yb, arcSize, arcSize);
+                        }
+                        if (cPiece.p.isWhite())
                             c = 'w';
                         else
                             c = 'b';
-                        Image image = Textures.getImage(c, board[j][i].toString()).getImage();
+                        Image image = Textures.getImage(c, cPiece.toString()).getImage();
                         Image newimg = image.getScaledInstance(xb, yb, java.awt.Image.SCALE_SMOOTH);
                         ImageIcon scaledIcon = new ImageIcon(newimg);
                         scaledIcon.paintIcon(this, g, xb + j * xb, yb + i * yb);

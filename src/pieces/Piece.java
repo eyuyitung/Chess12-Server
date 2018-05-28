@@ -53,5 +53,8 @@ public abstract class Piece {
             return (b.getBoard()[_x][_y] instanceof King);
         return false;
     }
+    public boolean selected(Board b){
+        return(b.fx == this.x && b.fy == this.y && p.isWhite() == b.isWhite);
+    }
 
 }

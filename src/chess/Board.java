@@ -21,6 +21,11 @@ public class Board {
     public Player white;
     public Player black;
 
+    Timer timer;
+    int counter = 0;
+    int wT = 0;
+    int bT = 0;
+
     public double wTotalTime, bTotalTime;
     private long wStartTime;
     private long bStartTime, bEndTime, wEndTime;
@@ -105,7 +110,17 @@ public class Board {
             System.out.println();
         }*/
         initFrame();
-        wStartTime = System.currentTimeMillis();
+        //wStartTime = System.currentTimeMillis();
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                counter ++;
+                System.out.println("counter = " + counter + " s");
+                drawing.repaint();
+                //timer.stop();
+            }
+        });
+        timer.start();
     }
 
     public Piece[][] getBoard() {
@@ -179,14 +194,19 @@ public class Board {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
                             System.out.println("white check black "+getPiece(_x, _y).check(this));
-                            wEndTime = System.currentTimeMillis();
-                            duration = (wEndTime - wStartTime)/1000.0;
-                            System.out.println(wTotalTime);
-                            wTotalTime -= duration;
-                            System.out.println("white took " + duration + " s");
-                            System.out.println("white has " + wTotalTime + " s left");
+                            //wEndTime = System.currentTimeMillis();
+                            //duration = (wEndTime - wStartTime)/1000.0;
+                            //System.out.println(wTotalTime);
+                            //wTotalTime -= duration;
+                            //System.out.println("white took " + duration + " s");
+                            //System.out.println("white has " + wTotalTime + " s left");
+                            timer.stop();
+                            wT += counter;
+                            System.out.println("white uses " + wT + " s in total");
+                            counter = 0;
                             isWhite = !isWhite;
-                            bStartTime = System.currentTimeMillis();
+                            //bStartTime = System.currentTimeMillis();
+                            timer.start();
                         }
                     }
 
@@ -195,13 +215,18 @@ public class Board {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
                             System.out.println("black check white "+ getPiece(_x, _y).check(this));
-                            bEndTime = System.currentTimeMillis();
-                            duration = (bEndTime - bStartTime)/1000.0;
-                            bTotalTime -= duration;
-                            System.out.println("black took " + duration + " s");
-                            System.out.println("black has " + wTotalTime + " s left");
+                            //bEndTime = System.currentTimeMillis();
+                            //duration = (bEndTime - bStartTime)/1000.0;
+                            //bTotalTime -= duration;
+                            //System.out.println("black took " + duration + " s");
+                            //System.out.println("black has " + wTotalTime + " s left");
+                            timer.stop();
+                            bT += counter;
+                            System.out.println("black uses " + bT + " s in total");
+                            counter = 0;
                             isWhite = !isWhite;
-                            wStartTime = System.currentTimeMillis();
+                            timer.start();
+                            //wStartTime = System.currentTimeMillis();
                         }
                     }
                 }
@@ -240,6 +265,18 @@ public class Board {
         }
 
         public void paint(Graphics g) {
+
+
+            if(isWhite){
+                g.drawString(String.valueOf(300 - (wT + counter)), 100,20);
+                g.drawString(String.valueOf(300 - bT), 670,20);
+            }
+
+            else if(!isWhite) {
+                g.drawString(String.valueOf(300 - (bT + counter)), 670, 20);
+                g.drawString(String.valueOf(300 - wT), 100,20);
+            }
+
             int arcSize = 10;
             char c;
             for (int i = 0; i < 8; i++) { // drawing board squares
@@ -259,10 +296,10 @@ public class Board {
                 for (int j = 0; j < 8; j++) {
                     if (i == fx && j == fy) { // bad workaround for square remaining highlighted after turn
                         if (board[fx][fy] != null && board[fx][fy].p.isWhite() && isWhite && first) {
-                            g.setColor(Color.decode("#ff0000"));
+                            g.setColor(Color.decode("#ff8c00"));
                             g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
                         } else if (board[fx][fy] != null && !board[fx][fy].p.isWhite() && !isWhite && first) {
-                            g.setColor(Color.decode("#ff0000"));
+                            g.setColor(Color.decode("#ff8c00"));
                             g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
                         }
                     }
@@ -300,6 +337,7 @@ public class Board {
                 g.drawString("White", xb, yb);
             else
                 g.drawString("Black", xb, yb);
+
         }
     }
 }

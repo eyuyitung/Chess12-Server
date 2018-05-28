@@ -12,6 +12,8 @@ public class Handler {
     Player black;
     Board board;
 
+
+
     int clickTimed = 0;
     int vol = 1;
     double turnLength = 0;

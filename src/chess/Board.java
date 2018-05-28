@@ -22,14 +22,16 @@ public class Board {
     public Player black;
 
     Timer timer;
+
+    int timedLength;
     int counter = 0;
     int wT = 0;
     int bT = 0;
 
-    public double wTotalTime, bTotalTime;
-    private long wStartTime;
-    private long bStartTime, bEndTime, wEndTime;
-    private double duration;
+    //public double wTotalTime, bTotalTime;
+    //private long wStartTime;
+    //private long bStartTime, bEndTime, wEndTime;
+    //private double duration;
 
     public int fx = -1, fy = -1;// mouse coordinate values
     private int width = 800;
@@ -115,6 +117,7 @@ public class Board {
             @Override
             public void actionPerformed(ActionEvent e) {
                 counter ++;
+                if(timedLength != 0)
                 System.out.println("counter = " + counter + " s");
                 drawing.repaint();
                 //timer.stop();
@@ -264,17 +267,24 @@ public class Board {
         }
 
         public void paint(Graphics g) {
+            Font main = new Font ("Serif", Font.BOLD, 20);
+            Font sec = new Font ("Serif", Font.PLAIN, 14);
+            Font gui = new Font ("Serif", Font.PLAIN, 12);
 
-
-            if(isWhite){
-                g.drawString(String.valueOf(300 - (wT + counter)), 100,20);
-                g.drawString(String.valueOf(300 - bT), 670,20);
+            if(timedLength != 0) {
+                if (isWhite) {
+                    g.setFont(main);
+                    g.drawString(String.valueOf((timedLength - (wT + counter)) / 60 + " : " + ((300 - wT - counter) % 60)), 100, 30);
+                    g.setFont(sec);
+                    g.drawString(String.valueOf((timedLength - bT) / 60 + " : " + (300 - wT) % 60), 670, 30);
+                } else if (!isWhite) {
+                    g.setFont(sec);
+                    g.drawString(String.valueOf((timedLength - wT) / 60 + " : " + (300 - wT) % 60), 100, 30);
+                    g.setFont(main);
+                    g.drawString(String.valueOf((timedLength - (bT + counter)) / 60 + " : " + ((300 - bT - counter) % 60)), 670, 30);
+                }
             }
-
-            else if(!isWhite) {
-                g.drawString(String.valueOf(300 - (bT + counter)), 670, 20);
-                g.drawString(String.valueOf(300 - wT), 100,20);
-            }
+            g.setFont(gui);
 
             int arcSize = 10;
             char c;

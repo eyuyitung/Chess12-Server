@@ -21,6 +21,11 @@ public class Board {
     public Player white;
     public Player black;
 
+    public double wTotalTime, bTotalTime;
+    private long wStartTime;
+    private long bStartTime, bEndTime, wEndTime;
+    private double duration;
+
     int fx = -1, fy = -1;// mouse coordinate values
     private int width = 800;
     private int height = 800;
@@ -100,6 +105,7 @@ public class Board {
             System.out.println();
         }*/
         initFrame();
+        wStartTime = System.currentTimeMillis();
     }
 
     public Piece[][] getBoard() {
@@ -173,7 +179,14 @@ public class Board {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
                             System.out.println("white check black "+getPiece(_x, _y).check(this));
+                            wEndTime = System.currentTimeMillis();
+                            duration = (wEndTime - wStartTime)/1000.0;
+                            System.out.println(wTotalTime);
+                            wTotalTime -= duration;
+                            System.out.println("white took " + duration + " s");
+                            System.out.println("white has " + wTotalTime + " s left");
                             isWhite = !isWhite;
+                            bStartTime = System.currentTimeMillis();
                         }
                     }
 
@@ -182,7 +195,13 @@ public class Board {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
                             System.out.println("black check white "+ getPiece(_x, _y).check(this));
+                            bEndTime = System.currentTimeMillis();
+                            duration = (bEndTime - bStartTime)/1000.0;
+                            bTotalTime -= duration;
+                            System.out.println("black took " + duration + " s");
+                            System.out.println("black has " + wTotalTime + " s left");
                             isWhite = !isWhite;
+                            wStartTime = System.currentTimeMillis();
                         }
                     }
                 }

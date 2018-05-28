@@ -28,7 +28,9 @@ public class Chess {
         if (screen == 2) {
             h.frame.setVisible(false);
             h.frame.dispose();
+
             h.run(); //change to game loop later
+
             h.close(); //closes all the ports
         }
 

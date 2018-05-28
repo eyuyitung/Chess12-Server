@@ -14,7 +14,7 @@ public class Handler {
 
     int clickTimed = 0;
     int vol = 1;
-    int turnLength = 0;
+    double turnLength = 0;
     boolean clickPlayLocal = false;
     boolean clickPlayLan = false;
     boolean clickPlay = false;
@@ -33,11 +33,16 @@ public class Handler {
         white = new Player(true);
         black = new Player(false);
         board = new Board(white, black);
+
         System.out.println("LOL");
     }
 
     public void run() { //change to tick / render
         board.display();
+        System.out.println("it is " + (turnLength));
+        board.wTotalTime = turnLength;
+        board.bTotalTime = turnLength;
+
         if(vol == 0)
             Music.volume = Music.Volume.MUTE;
         else if(vol == 1)
@@ -95,12 +100,12 @@ public class Handler {
             }
 
             else if(clickPlay && !clickOptions && 55 < rx && rx < 305 && 475 < ry && ry < 575 && clickTimed == 2 && turnLength == 0) { //clicked on 5min
-                turnLength = 5;
+                turnLength = 300;
                 System.out.println("turn length = 5min");
             }
 
             else if(clickPlay && !clickOptions  && 55 < rx && rx < 305 && 575 < ry && ry < 675 && clickTimed == 2 && turnLength == 0){// clicked on 10min
-                turnLength = 10;
+                turnLength = 600;
                 System.out.println("turn length= 10min");
             }
 

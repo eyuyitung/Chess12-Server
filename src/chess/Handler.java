@@ -16,7 +16,7 @@ public class Handler {
 
     int clickTimed = 0;
     int vol = 1;
-    double turnLength = 0;
+    int turnLength = 0;
     boolean clickPlayLocal = false;
     boolean clickPlayLan = false;
     boolean clickPlay = false;
@@ -41,9 +41,8 @@ public class Handler {
 
     public void run() { //change to tick / render
         board.display();
-        System.out.println("it is " + (turnLength));
-        board.wTotalTime = turnLength;
-        board.bTotalTime = turnLength;
+        //System.out.println("it is " + (turnLength));
+        board.timedLength = turnLength;
 
         if(vol == 0)
             Music.volume = Music.Volume.MUTE;

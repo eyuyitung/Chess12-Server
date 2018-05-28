@@ -28,11 +28,6 @@ public class Board {
     int wT = 0;
     int bT = 0;
 
-    //public double wTotalTime, bTotalTime;
-    //private long wStartTime;
-    //private long bStartTime, bEndTime, wEndTime;
-    //private double duration;
-
     public int fx = -1, fy = -1;// mouse coordinate values
     private int width = 800;
     private int height = 800;
@@ -47,8 +42,6 @@ public class Board {
     public int blackKingLocX;
     public int blackKingLocY;
 
-    public boolean whiteKingChecked;
-    public boolean blackKingChecked;
     boolean first = true;
 
     public Piece capturedPiece = null;
@@ -112,7 +105,6 @@ public class Board {
             System.out.println();
         }*/
         initFrame();
-        //wStartTime = System.currentTimeMillis();
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -196,18 +188,11 @@ public class Board {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
                             System.out.println("white check black "+getPiece(_x, _y).check(this));
-                            //wEndTime = System.currentTimeMillis();
-                            //duration = (wEndTime - wStartTime)/1000.0;
-                            //System.out.println(wTotalTime);
-                            //wTotalTime -= duration;
-                            //System.out.println("white took " + duration + " s");
-                            //System.out.println("white has " + wTotalTime + " s left");
                             timer.stop();
                             wT += counter;
                             System.out.println("white uses " + wT + " s in total");
                             counter = 0;
                             isWhite = !isWhite;
-                            //bStartTime = System.currentTimeMillis();
                             timer.start();
                         }
                     }
@@ -217,18 +202,12 @@ public class Board {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
                             System.out.println("black check white "+ getPiece(_x, _y).check(this));
-                            //bEndTime = System.currentTimeMillis();
-                            //duration = (bEndTime - bStartTime)/1000.0;
-                            //bTotalTime -= duration;
-                            //System.out.println("black took " + duration + " s");
-                            //System.out.println("black has " + wTotalTime + " s left");
                             timer.stop();
                             bT += counter;
                             System.out.println("black uses " + bT + " s in total");
                             counter = 0;
                             isWhite = !isWhite;
                             timer.start();
-                            //wStartTime = System.currentTimeMillis();
                         }
                     }
                 }
@@ -240,26 +219,6 @@ public class Board {
         drawing.repaint();
     }
 
-    public boolean checkCheck() {  //returns true if in check
-        boolean tmp = false;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (isWhite) {
-                    if (getPiece(j, i) != null && !getPiece(j, i).p.isWhite()) {
-                        if (getPiece(j, i).check(this)) {
-                            tmp = true;
-                        }
-                    }
-                } else {
-                    if (getPiece(j, i) != null && getPiece(j, i).p.isWhite()) {
-                        if (getPiece(j, i).check(this))
-                            tmp = true;
-                    }
-                }
-            }
-        }
-        return tmp;
-    }
 
     class Drawing extends JComponent {
         public Drawing() {
@@ -277,7 +236,7 @@ public class Board {
                     g.drawString(String.valueOf((timedLength - (wT + counter)) / 60 + " : " + ((300 - wT - counter) % 60)), 100, 30);
                     g.setFont(sec);
                     g.drawString(String.valueOf((timedLength - bT) / 60 + " : " + (300 - wT) % 60), 670, 30);
-                } else if (!isWhite) {
+                } else {
                     g.setFont(sec);
                     g.drawString(String.valueOf((timedLength - wT) / 60 + " : " + (300 - wT) % 60), 100, 30);
                     g.setFont(main);
@@ -300,20 +259,7 @@ public class Board {
                         g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
                     }
                 }
-            }/*
-            for (int i = 0; i < 8; i++) { // drawing highlighted square of selected piece
-                for (int j = 0; j < 8; j++) {
-                    if (i == fx && j == fy) { // bad workaround for square remaining highlighted after turn
-                        if (board[fx][fy] != null && board[fx][fy].p.isWhite() && isWhite && first) {
-                            g.setColor(Color.decode("#ff8c00"));
-                            g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
-                        } else if (board[fx][fy] != null && !board[fx][fy].p.isWhite() && !isWhite && first) {
-                            g.setColor(Color.decode("#ff8c00"));
-                            g.fillRoundRect(xb + i * (xb), yb + j * (yb), xb, yb, arcSize, arcSize);
-                        }
-                    }
-                }
-            }*/
+            }
 
 
             for (int i = 0; i < 8; i++) {// drawing pieces

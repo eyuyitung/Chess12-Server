@@ -20,7 +20,7 @@ public class Chess {
 
         while (screen == 1) {
             h.menuDisplay();
-            if (h.clickPlayLocal)
+            if (h.clickPlayLocal || h.clickPlayLan)
                 screen = 2;
             h.drawing.repaint();
         }

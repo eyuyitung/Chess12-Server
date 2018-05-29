@@ -11,6 +11,8 @@ import pieces.Rook;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.net.*;
 import javax.swing.*;
 
 
@@ -27,6 +29,9 @@ public class Board {
     int counter = 0;
     int wT = 0;
     int bT = 0;
+    public boolean lan;
+    boolean initLan = true;
+    Socket sock = null;
 
     public int fx = -1, fy = -1;// mouse coordinate values
     private int width = 800;
@@ -41,10 +46,11 @@ public class Board {
     public int whiteKingLocY;
     public int blackKingLocX;
     public int blackKingLocY;
-
     boolean first = true;
-
     public Piece capturedPiece = null;
+
+    PrintStream out = null;
+    ServerSocket servsock;
 
     public Board(Player white, Player black) {
         this.white = white;
@@ -61,7 +67,10 @@ public class Board {
         frame.setResizable(false);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
     }
+
 
     private void initializePieces() {
         for (int i = 0; i < 8; i++) {
@@ -94,25 +103,16 @@ public class Board {
     }
 
     public void display() {
-      /*  for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (board[j][i] != null) {
-                    System.out.print(board[j][i]);
-                } else {
-                    System.out.print("  ");
-                }
-            }
-            System.out.println();
-        }*/
         initFrame();
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                counter ++;
-                if(timedLength != 0)
-                System.out.println("counter = " + counter + " s");
+                counter++;
+                if (timedLength != 0)
+                    System.out.println("counter = " + counter + " s");
+                if(lan)
+                    try{lanPlay();}catch(IOException ioe){}
                 drawing.repaint();
-                //timer.stop();
             }
         });
         timer.start();
@@ -163,7 +163,7 @@ public class Board {
                     mouseMove(fx, fy, dx, dy);
                     first = true;
                 } else { // click movement
-                    if (first)  {
+                    if (first) {
                         ix = fx;
                         iy = fy;
                         first = false;
@@ -178,8 +178,45 @@ public class Board {
         }
     }
 
+    public void lanPlay() throws IOException {
+
+        if (initLan) {
+            System.out.println("Starting server ...");
+            servsock = new ServerSocket(4444, 0);
+            sock = servsock.accept();
+            System.out.println("sock = " + sock);
+            initLan = false;
+        }
+        out = new PrintStream(sock.getOutputStream());
+        BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+        while (!isWhite) {
+            System.out.println("waiting for response");
+            if (in.ready()) {
+                int x = Integer.parseInt(in.readLine());
+                int y = Integer.parseInt(in.readLine());
+                int _x = Integer.parseInt(in.readLine());
+                int _y = Integer.parseInt(in.readLine());
+                if (timedLength != 0)
+                    bT -= Integer.parseInt(in.readLine());// TODO fix time syncing across lan computers
+                System.out.println("from " + x + ", " + y);
+                System.out.println("to " + _x + ", " + _y);
+                System.out.println("black has " + bT + " s remaining");
+                mouseMove(x, y, _x, _y);
+
+            }
+        }
+
+    }
+
 
     public void mouseMove(int x, int y, int _x, int _y) {
+
+        Piece[][] tmp = new Piece[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                tmp[i][j] = board[i][j];
+            }
+        }
 
         try {
             if (!(x == _x && y == _y)) {
@@ -187,32 +224,65 @@ public class Board {
                     if (getPiece(x, y).p.isWhite()) {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
-                            System.out.println("white check black "+getPiece(_x, _y).check(this));
-                            timer.stop();
-                            wT += counter;
-                            System.out.println("white uses " + wT + " s in total");
-                            counter = 0;
+                            System.out.println("white check black " + getPiece(_x, _y).check(this));
+                            if (timedLength != 0) {
+                                timer.stop();
+                                wT += counter;
+                                System.out.println("white uses " + wT + " s in total");
+                                counter = 0;
+                                timer.start();
+                            }
+                            if (lan) {
+                                out.println(x);
+                                out.println(y);
+                                out.println(_x);
+                                out.println(_y);
+                                if (timedLength != 0)
+                                    out.println(wT);
+                                out.flush();
+                            }
                             isWhite = !isWhite;
-                            timer.start();
                         }
                     }
 
                 } else {
+
                     if (!getPiece(x, y).p.isWhite()) {
+
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
-                            System.out.println("black check white "+ getPiece(_x, _y).check(this));
-                            timer.stop();
-                            bT += counter;
-                            System.out.println("black uses " + bT + " s in total");
-                            counter = 0;
+                            System.out.println("black check white " + getPiece(_x, _y).check(this));
+                            if (timedLength != 0) {
+                                timer.stop();
+                                bT += counter;
+                                System.out.println("black uses " + bT + " s in total");
+                                counter = 0;
+                                timer.start();
+                            }
                             isWhite = !isWhite;
-                            timer.start();
                         }
                     }
                 }
-                System.out.println("To : " + _x + " " + _y);
+                boolean checked = false;
+                //checks for the checking
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        if (getPiece(i, j) != null && getPiece(i, j).p.white == isWhite && checked == false) {
+                            checked = getPiece(i, j).check(this);
+                            if (checked) {
+                                System.out.println("x " + getPiece(i, j).x + " y " + getPiece(i, j).y);
+
+                            }
+                        }
+                    }
+                }
+                if (checked) {
+                    board = tmp;
+                    isWhite = !isWhite;
+                    System.out.println("same");
+                }
             }
+            System.out.println("To : " + _x + " " + _y);
         } catch (Exception e) {
             System.out.println("Invalid move");
         }
@@ -226,16 +296,16 @@ public class Board {
         }
 
         public void paint(Graphics g) {
-            Font main = new Font ("Serif", Font.BOLD, 20);
-            Font sec = new Font ("Serif", Font.PLAIN, 14);
-            Font gui = new Font ("Serif", Font.PLAIN, 12);
+            Font main = new Font("Serif", Font.BOLD, 20);
+            Font sec = new Font("Serif", Font.PLAIN, 14);
+            Font gui = new Font("Serif", Font.PLAIN, 12);
 
-            if(timedLength != 0) {
+            if (timedLength != 0) {
                 if (isWhite) {
                     g.setFont(main);
                     g.drawString(String.valueOf((timedLength - (wT + counter)) / 60 + " : " + ((300 - wT - counter) % 60)), 100, 30);
                     g.setFont(sec);
-                    g.drawString(String.valueOf((timedLength - bT) / 60 + " : " + (300 - wT) % 60), 670, 30);
+                    g.drawString(String.valueOf((timedLength - bT) / 60 + " : " + (300 - bT) % 60), 670, 30);
                 } else {
                     g.setFont(sec);
                     g.drawString(String.valueOf((timedLength - wT) / 60 + " : " + (300 - wT) % 60), 100, 30);
@@ -266,7 +336,7 @@ public class Board {
                 for (int j = 0; j < 8; j++) {
                     Piece cPiece = board[j][i];
                     if (cPiece != null) {
-                        if (cPiece.selected(Board.this)){
+                        if (cPiece.selected(Board.this)) {
                             g.setColor(Color.decode("#ff8c00"));
                             g.fillRoundRect(xb + j * (xb), yb + i * (yb), xb, yb, arcSize, arcSize);
                         }

@@ -14,8 +14,8 @@ import chess.Player;
  */
 public abstract class Piece {
 
-    protected int x;
-    protected int y;
+    public int x;
+    public int y;
     public Player p;
 
     public Piece(Player p, int x, int y) {

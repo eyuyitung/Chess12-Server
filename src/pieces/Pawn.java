@@ -1,16 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package pieces;
 
 import chess.Board;
 import chess.Player;
 
-/**
- * @author Lucas
- */
+
 public class Pawn extends Piece {
 
     private int movement;
@@ -18,6 +12,15 @@ public class Pawn extends Piece {
 
     public Pawn(Player p, int x, int y) {
         super(p, x, y);
+        if (p.isWhite()) {
+            movement = -1;
+        } else {
+            movement = 1;
+        }
+        moved = false;
+    }
+    public Pawn(Piece pawn) {
+        super(pawn.p,pawn.x,pawn.y);
         if (p.isWhite()) {
             movement = -1;
         } else {

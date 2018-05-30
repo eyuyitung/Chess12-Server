@@ -1,27 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package pieces;
 
 import chess.Board;
 import chess.Player;
 
-/**
- *
- * @author Lucas
- */
 public abstract class Piece {
 
-    protected int x;
-    protected int y;
+    public int x;
+    public int y;
     public Player p;
 
     public Piece(Player p, int x, int y) {
         this.p = p;
         this.x = x;
         this.y = y;
+    }
+
+    public Piece(Piece piece) {
+        if (p != null) {
+            this.p = piece.p;
+            this.x = piece.x;
+            this.y = piece.y;
+        }
     }
 
     public abstract boolean checkValidMove(Board b, int _x, int _y);
@@ -52,6 +52,9 @@ public abstract class Piece {
         if (b.getBoard()[_x][_y] != null)
             return (b.getBoard()[_x][_y] instanceof King);
         return false;
+    }
+    public boolean selected(Board b){
+        return(b.fx == this.x && b.fy == this.y && p.isWhite() == b.isWhite);
     }
 
 }

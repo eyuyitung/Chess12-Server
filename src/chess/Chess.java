@@ -1,9 +1,6 @@
 
 package chess;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
 
 public class Chess {
 
@@ -20,7 +17,7 @@ public class Chess {
 
         while (screen == 1) {
             h.menuDisplay();
-            if (h.clickPlayLocal)
+            if (h.clickPlayLocal || h.clickPlayLan)
                 screen = 2;
             h.drawing.repaint();
         }
@@ -28,7 +25,9 @@ public class Chess {
         if (screen == 2) {
             h.frame.setVisible(false);
             h.frame.dispose();
+
             h.run(); //change to game loop later
+
             h.close(); //closes all the ports
         }
 

@@ -34,7 +34,7 @@ public enum Music {
             if (clip.isRunning())
                 clip.stop();   // Stop the player if it is still running
             clip.setFramePosition(0); // rewind to the beginning
-            clip.start();     // Start playing
+            clip.loop(Clip.LOOP_CONTINUOUSLY);     // Start playing
         }
     }
     public void stop() {

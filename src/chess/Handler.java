@@ -39,7 +39,7 @@ public class Handler {
 
     public void run() { //change to tick / render
         board.display();
-        //System.out.println("it is " + (turnLength));
+        System.out.println("it is " + (turnLength));
         board.timedLength = turnLength;
         board.lan = clickPlayLan;
         if (vol == 0)
@@ -91,22 +91,23 @@ public class Handler {
                 System.out.println("time mode = 1");
             } else if (clickPlay && !clickOptions && 55 < rx && rx < 305 && 575 < ry && ry < 675 && clickTimed == 0) { //click on TIMED
                 clickTimed = 2;
+                String time = JOptionPane.showInputDialog("Please enter desired time amount (in minutes)");
+                turnLength = Integer.parseInt(time) * 60;
                 System.out.println("time mode = 2");
-            } else if (clickPlay && !clickOptions && 55 < rx && rx < 305 && 475 < ry && ry < 575 && clickTimed == 2 && turnLength == 0) { //clicked on 5min
-                turnLength = 300;
+            /*} else if (clickPlay && !clickOptions && 55 < rx && rx < 305 && 475 < ry && ry < 575 && clickTimed == 2 && turnLength == 0) { //clicked on choose time
                 String time = JOptionPane.showInputDialog("Please enter desired time amount (in minutes)");
                 turnLength = Integer.parseInt(time) * 60;
                 System.out.println("turn length = " + turnLength);
-            }  else if ((clickPlay && !clickOptions && clickTimed == 1 && 55 < rx && rx < 305 && 475 < ry && ry < 575) || (clickPlay && !clickOptions && clickTimed == 2 && turnLength != 0 && 55 < rx && rx < 305 && 475 < ry && ry < 575)) {  //clicked on local
+            */} else if ((clickPlay && !clickOptions && clickTimed == 1 && 55 < rx && rx < 305 && 475 < ry && ry < 575) || (clickPlay && !clickOptions && clickTimed == 2 && turnLength != 0 && 55 < rx && rx < 305 && 475 < ry && ry < 575)) {  //clicked on local
                 clickPlayLocal = true;
                 System.out.println("play mode = local");
             } else if (clickPlay && !clickOptions && clickTimed != 0 && 55 < rx && rx < 305 && 575 < ry && ry < 675) { //clicked on Lan
                 clickPlayLan = true;
                 System.out.println("play mode = lan");
-                try {
+                /*try {
                     board.lanPlay();
                 } catch (IOException ioe) {
-                }
+                }*/
                 // String C = JOptionPane.showInputDialog("Please enter server computer name");
             } else if (!clickPlay && !clickOptions && 55 < rx && rx < 305 && 575 < ry && ry < 675) {  // clicked on options
                 clickOptions = true;
@@ -248,7 +249,7 @@ public class Handler {
             if (clickPlay && !clickOptions && clickTimed == 2 && turnLength == 0) { //displaying time selections
                 //sFiveB.paintIcon(this, g, 55, 450);
                 //sTenB.paintIcon(this, g, 55, 550);
-                sChooseB.paintIcon(this, g, 55, 450);
+                //sChooseB.paintIcon(this, g, 55, 450);
             }
 
             if ((clickPlay && !clickOptions && clickTimed == 1) || (clickPlay && !clickOptions && clickTimed == 2 && turnLength != 0)) { //displaying Local/ LAN

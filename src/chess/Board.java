@@ -32,7 +32,6 @@ public class Board {
     public boolean lan;
     boolean initLan = true;
     Socket sock = null;
-
     public int fx = -1, fy = -1;// mouse coordinate values
     private int width = 800;
     private int height = 800;
@@ -110,8 +109,11 @@ public class Board {
                 counter++;
                 if (timedLength != 0)
                     System.out.println("counter = " + counter + " s");
-                if(lan)
-                    try{lanPlay();}catch(IOException ioe){}
+                if (lan)
+                    try {
+                        lanPlay();
+                    } catch (IOException ioe) {
+                    }
                 drawing.repaint();
             }
         });
@@ -135,11 +137,18 @@ public class Board {
 
         @Override
         public void mousePressed(MouseEvent e) {
+
             int x = e.getX();
             int y = e.getY();
+
             if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
                 fx = (x - 3) / xb - 1;
                 fy = (y - 25) / yb - 1;
+                if (lan) {
+                    if (!board[fx][fy].p.isWhite())
+                        fx = fy = -1;
+                }
+
                 if (board[fx][fy] != null || !first) {
                     System.out.println("From : " + fx + " " + fy);
                 } else
@@ -155,6 +164,7 @@ public class Board {
         public void mouseReleased(MouseEvent e) {
             int x = e.getX();
             int y = e.getY();
+
             if (x >= xb && x <= xb * 9 && y >= yb && y <= yb * 9) {
                 dx = (x - 3) / xb - 1;
                 dy = (y - 25) / yb - 1;
@@ -185,19 +195,29 @@ public class Board {
             servsock = new ServerSocket(4444, 0);
             sock = servsock.accept();
             System.out.println("sock = " + sock);
-            initLan = false;
         }
         out = new PrintStream(sock.getOutputStream());
+        if (initLan) {
+            System.out.println("timedLength = " + timedLength);
+            if (timedLength != 0)
+                out.println(timedLength); // first move sends timedLength to client
+            out.flush();
+            initLan = false;
+        }
+
         BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-        while (!isWhite) {
+        if (!isWhite) {
             System.out.println("waiting for response");
             if (in.ready()) {
                 int x = Integer.parseInt(in.readLine());
                 int y = Integer.parseInt(in.readLine());
                 int _x = Integer.parseInt(in.readLine());
                 int _y = Integer.parseInt(in.readLine());
-                if (timedLength != 0)
-                    bT -= Integer.parseInt(in.readLine());// TODO fix time syncing across lan computers
+                if (timedLength != 0) {
+                    wT = Integer.parseInt(in.readLine());
+                    //bT = Integer.parseInt(in.readLine());
+
+                }
                 System.out.println("from " + x + ", " + y);
                 System.out.println("to " + _x + ", " + _y);
                 System.out.println("black has " + bT + " s remaining");
@@ -225,6 +245,7 @@ public class Board {
                         if (getPiece(x, y).checkValidMove(this, _x, _y)) {
                             getPiece(x, y).move(this, _x, _y, capturedPiece);
                             System.out.println("white check black " + getPiece(_x, _y).check(this));
+
                             if (timedLength != 0) {
                                 timer.stop();
                                 wT += counter;
@@ -237,8 +258,11 @@ public class Board {
                                 out.println(y);
                                 out.println(_x);
                                 out.println(_y);
-                                if (timedLength != 0)
-                                    out.println(wT);
+                                if (timedLength != 0) {
+                                    //out.println(wT);
+                                    out.println(bT);
+
+                                }
                                 out.flush();
                             }
                             isWhite = !isWhite;
@@ -336,7 +360,7 @@ public class Board {
                 for (int j = 0; j < 8; j++) {
                     Piece cPiece = board[j][i];
                     if (cPiece != null) {
-                        if (cPiece.selected(Board.this)) {
+                        if (cPiece.selected(Board.this)) { // drawing selection highlight
                             g.setColor(Color.decode("#ff8c00"));
                             g.fillRoundRect(xb + j * (xb), yb + i * (yb), xb, yb, arcSize, arcSize);
                         }

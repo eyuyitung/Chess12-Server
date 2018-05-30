@@ -1,7 +1,6 @@
 
 package chess;
 
-import java.io.IOException;
 import java.util.Scanner;
 import java.awt.*;
 import java.awt.event.*;

@@ -25,6 +25,15 @@ public class Pawn extends Piece {
         }
         moved = false;
     }
+    public Pawn(Piece pawn) {
+        super(pawn.p,pawn.x,pawn.y);
+        if (p.isWhite()) {
+            movement = -1;
+        } else {
+            movement = 1;
+        }
+        moved = false;
+    }
 
     @Override
     public boolean checkValidMove(Board b, int _x, int _y) {

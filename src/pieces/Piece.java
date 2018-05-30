@@ -24,6 +24,14 @@ public abstract class Piece {
         this.y = y;
     }
 
+    public Piece(Piece piece) {
+        if (p != null) {
+            this.p = piece.p;
+            this.x = piece.x;
+            this.y = piece.y;
+        }
+    }
+
     public abstract boolean checkValidMove(Board b, int _x, int _y);
 
     public abstract void move(Board b, int _x, int _y, Piece piece);

@@ -19,6 +19,9 @@ public class Queen extends Piece {
     public Queen(Player p, int x, int y) {
         super(p, x, y);
     }
+    public Queen(Piece q) {
+        super(q.p,q.x,q.y);
+    }
 
     @Override
     public boolean checkValidMove(Board b, int _x, int _y) {

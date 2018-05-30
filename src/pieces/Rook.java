@@ -21,6 +21,10 @@ public class Rook extends Piece {
         super(p, x, y);
         moved = false;
     }
+    public Rook(Piece r) {
+        super(r.p,r.x,r.y);
+        moved = false;
+    }
 
     @Override
     public boolean checkValidMove(Board b, int _x, int _y){

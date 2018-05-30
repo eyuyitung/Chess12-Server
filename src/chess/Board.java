@@ -234,7 +234,22 @@ public class Board {
         Piece[][] tmp = new Piece[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                tmp[i][j] = board[i][j];
+                if (board[i][j] != null) {
+                    if (board[i][j] instanceof King) {
+                        tmp[i][j] = new King(board[i][j]);
+                    } else if (board[i][j] instanceof Queen) {
+                        tmp[i][j] = new Queen(board[i][j]);
+                    } else if (board[i][j] instanceof Bishop) {
+                        tmp[i][j] = new Bishop(board[i][j]);
+                    } else if (board[i][j] instanceof Knight) {
+                        tmp[i][j] = new Knight(board[i][j]);
+                    } else if (board[i][j] instanceof Rook) {
+                        tmp[i][j] = new Rook(board[i][j]);
+                    } else if (board[i][j] instanceof Pawn) {
+                        tmp[i][j] = new Pawn(board[i][j]);
+                    }
+
+                }
             }
         }
 
@@ -291,7 +306,7 @@ public class Board {
                 //checks for the checking
                 for (int i = 0; i < 8; i++) {
                     for (int j = 0; j < 8; j++) {
-                        if (getPiece(i, j) != null && getPiece(i, j).p.white == isWhite && checked == false) {
+                        if (getPiece(i, j) != null && getPiece(i, j).p.white == isWhite && !checked) {
                             checked = getPiece(i, j).check(this);
                             if (checked) {
                                 System.out.println("x " + getPiece(i, j).x + " y " + getPiece(i, j).y);

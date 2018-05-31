@@ -186,6 +186,13 @@ public class Board {
         }
     }
 
+    /*** lanPlay *******************************************
+     * Purpose: Connect to client game if running and play *
+     *          selected game mode online between computers*
+     * Parameters: none                                    *
+     * Returns: none                                       *
+     ******************************************************/
+
     public void lanPlay() throws IOException {
 
         if (initLan) {
@@ -196,9 +203,8 @@ public class Board {
         }
         out = new PrintStream(sock.getOutputStream());
         if (initLan) {
-            System.out.println("timedLength = " + timedLength);
             if (timedLength != 0)
-                out.println(timedLength); // first move sends timedLength to client
+                out.println(timedLength); // if init, sends timedLength to client to sync timing
             out.flush();
             initLan = false;
         }
@@ -207,7 +213,7 @@ public class Board {
         if (!isWhite) {
             System.out.println("waiting for response");
             if (in.ready()) {
-                int x = Integer.parseInt(in.readLine());
+                int x = Integer.parseInt(in.readLine()); // read in moves from client instance
                 int y = Integer.parseInt(in.readLine());
                 int _x = Integer.parseInt(in.readLine());
                 int _y = Integer.parseInt(in.readLine());

@@ -16,7 +16,7 @@ public enum Music {
     public static Volume volume = Volume.LOW;
     private Clip clip;
 
-    Music(String song) {
+    Music(String song)  {
         try {
             String localDir = System.getProperty("user.dir");
             File file = new File(localDir + "\\Music\\" + song);
@@ -29,14 +29,24 @@ public enum Music {
         }
     }
 
+    /*** play ***********************************************
+     * Purpose: Play music from start and loop indefinitely *
+     * Parameters: none                                     *
+     * Returns: none                                        *
+     ******************************************************/
     public void play() {
         if (volume != Volume.MUTE) {
             if (clip.isRunning())
                 clip.stop();   // Stop the player if it is still running
             clip.setFramePosition(0); // rewind to the beginning
-            clip.start();     // Start playing
+            clip.loop(Clip.LOOP_CONTINUOUSLY);     // Start playing
         }
     }
+    /*** stop ***********************************************
+     * Purpose: stop music if music is playing              *
+     * Parameters: none                                     *
+     * Returns: none                                        *
+     ******************************************************/
     public void stop() {
         if (clip.isRunning())
             clip.stop();   // Stop the player if it is still running

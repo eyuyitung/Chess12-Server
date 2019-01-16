@@ -13,6 +13,11 @@ public class King extends Piece {
         moved = false;
     }
 
+    public King(Piece k) {
+        super(k.p,k.x,k.y);
+        moved = false;
+    }
+
     @Override
     public boolean checkValidMove(Board b, int _x, int _y) {
         if (isValid(x, y, _x, _y) && !sameColor(b, x, y, _x, _y) && !nearKing(b, x, y, _x, _y)) {

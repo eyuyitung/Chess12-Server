@@ -1,21 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pieces;
 
 import chess.Board;
 import chess.Player;
 
-/**
- *
- * @author Lucas
- */
 public class Knight extends Piece {
 
     public Knight(Player p, int x, int y) {
         super(p, x, y);
+    }
+    public Knight(Piece k) {
+        super(k.p,k.x,k.y);
     }
 
     @Override
@@ -39,11 +33,11 @@ public class Knight extends Piece {
 
     @Override
     public boolean check(Board b) {
-        if (b.getPiece(x,y).p == b.white){
-            return (Math.abs(x - b.blackKingLocX) + Math.abs(y - b.blackKingLocY)) == 3 && Math.abs(x - b.blackKingLocX) == 2 * Math.abs(y - b.blackKingLocY) || 2 * Math.abs(x - b.blackKingLocX) == Math.abs(y - b.blackKingLocY);
+        if (b.getPiece(x, y).p == b.white) {
+            return ((Math.abs(x - b.blackKingLocX) + Math.abs(y - b.blackKingLocY)) == 3 && Math.abs(x - b.blackKingLocX) == 2 * Math.abs(y - b.blackKingLocY) || 2 * Math.abs(x - b.blackKingLocX) == Math.abs(y - b.blackKingLocY)) && Math.abs(x - b.blackKingLocX) + Math.abs(y - b.blackKingLocY) <= 3;
+        } else {
+            return ((Math.abs(x - b.whiteKingLocX) + Math.abs(y - b.whiteKingLocY)) == 3 && Math.abs(x - b.whiteKingLocX) == 2 * Math.abs(y - b.whiteKingLocY) || 2 * Math.abs(x - b.whiteKingLocX) == Math.abs(y - b.whiteKingLocY)) && Math.abs(x - b.whiteKingLocX) + Math.abs(y - b.whiteKingLocY) <= 3;
         }
-        else
-            return (Math.abs(x - b.whiteKingLocX) + Math.abs(y - b.whiteKingLocY)) == 3 && Math.abs(x - b.whiteKingLocX) == 2 * Math.abs(y - b.whiteKingLocY) || 2 * Math.abs(x - b.whiteKingLocX) == Math.abs(y - b.whiteKingLocY);
     }
 
     @Override

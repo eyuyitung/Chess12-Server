@@ -1,17 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pieces;
 
 import chess.Board;
 import chess.Player;
 
-/**
- *
- * @author Lucas
- */
+
 public class Rook extends Piece {
 
     private boolean inbetween = false;
@@ -19,6 +11,10 @@ public class Rook extends Piece {
 
     public Rook(Player p, int x, int y) {
         super(p, x, y);
+        moved = false;
+    }
+    public Rook(Piece r) {
+        super(r.p,r.x,r.y);
         moved = false;
     }
 

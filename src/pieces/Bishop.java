@@ -9,6 +9,9 @@ public class Bishop extends Piece {
     private boolean inbetween = false;
 
     public Bishop(Player p, int x, int y) { super(p, x, y); }
+    public Bishop(Piece b) {
+        super(b.p,b.x,b.y);
+    }
 
     @Override
     public boolean checkValidMove(Board b, int _x, int _y) {

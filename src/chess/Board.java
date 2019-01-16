@@ -85,7 +85,7 @@ public class Board {
     }
 
     public void display() {
-        for (int i = 0; i < 8; i++) {
+       /* for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (board[j][i] != null) {
                     System.out.print(board[j][i]);
@@ -94,7 +94,7 @@ public class Board {
                 }
             }
             System.out.println();
-        }
+        }*/
         initFrame();
         // drawing.repaint();
     }
